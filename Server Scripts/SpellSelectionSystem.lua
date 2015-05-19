@@ -6,12 +6,11 @@ local CHOICE_TABLE = {
 	-- Each set of values must contain at least 3 unique values
 	-- level = { number of types, type1, set of values for type1, ... }
 	-- each value in set of values MUST be unique
-	[2] = {2, 1, {1752, 2983, 1908}, 2, {50055, 23368, 26029}},
-	[3] = {2, 1, {1752, 2983, 1908}, 2, {50055, 23368, 26029}},
-	[4] = {2, 1, {1752, 2983, 1908}, 2, {50055, 23368, 26029}},
-	[5] = {2, 1, {1752, 2983, 1908}, 2, {50055, 23368, 26029}},
-	[6] = {2, 1, {1752, 2983, 1908}, 2, {50055, 23368, 26029}}
-	
+	[2] = {2, 1, {1752, 2983, 90000}, 2, {50055, 23368, 26029}},
+	[3] = {2, 1, {1752, 2983, 90000}, 2, {50055, 23368, 26029}},
+	[4] = {2, 1, {1752, 2983, 90000}, 2, {50055, 23368, 26029}},
+	[5] = {2, 1, {1752, 2983, 90000}, 2, {50055, 23368, 26029}},
+	[6] = {2, 1, {1752, 2983, 90000}, 2, {50055, 23368, 26029}}
 }
 
 local function PLAYER_EVENT_ON_LEVEL_CHANGE(event, player, oldLevel)
@@ -105,3 +104,27 @@ end
 functionLookup = {
 	["SELECT"] = SelectLevelReward
 }
+
+--- on delete character
+
+local function PLAYER_EVENT_ON_CHARACTER_DELETE(event, guid)
+	if guid then
+		CharDBQuery("DELETE FROM `spellselectionsystem` WHERE `guid` = '"..guid.."'")
+	end
+end
+
+RegisterPlayerEvent(2, PLAYER_EVENT_ON_CHARACTER_DELETE)
+
+---- on first login
+
+local function PLAYER_EVENT_ON_FIRST_LOGIN(event, plr)
+	if plr then
+		for _,t in pairs(CHOICE_TABLE) do
+			for _,v in pairs(t[3]) do
+				plr:ForceItemDownPlayersThroat(v)
+			end
+		end
+	end
+end
+
+RegisterPlayerEvent(30, PLAYER_EVENT_ON_FIRST_LOGIN)
