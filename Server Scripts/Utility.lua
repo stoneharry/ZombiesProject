@@ -38,3 +38,18 @@ function scen_split(str)
 	end
 	return d
 end
+
+-----------------------------
+--Testing deletion of spell--
+--------Spell: 90003---------
+--[[
+local function PLAYER_EVENT_ON_SPELL_CAST(event,plr,spell,skipCheck)
+	if spell == 90003 then
+		if plr ~= nil then
+			plr:RemoveSpell(90003)
+		end
+	end
+end
+
+RegisterPlayerEvent(5, PLAYER_EVENT_ON_SPELL_CAST)
+--]]
