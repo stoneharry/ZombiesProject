@@ -7,7 +7,7 @@ local function spawnZombies(pUnit, number)
 	for i=1,number do
 		local x = pUnit:GetX() + math.random(-15, 15)
 		local y = pUnit:GetY() + math.random(-15, 15)
-		pUnit:SpawnCreature(zombieMinionID, x, y, map:GetHeight(x, y), 0)
+		pUnit:SpawnCreature(zombieMinionID, x, y, map:GetHeight(x, y), 0, 6, 5000)
 	end
 end
 
