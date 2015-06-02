@@ -6,11 +6,11 @@ local CHOICE_TABLE = {
 	-- Each set of values must contain at least 3 unique values
 	-- level = { number of types, type1, set of values for type1, ... }
 	-- each value in set of values MUST be unique
-	[2] = {2, 1, {1752, 2983, 90000}, 2, {50055, 23368, 26029}},
-	[3] = {2, 1, {1752, 2983, 90000}, 2, {50055, 23368, 26029}},
-	[4] = {2, 1, {1752, 2983, 90000}, 2, {50055, 23368, 26029}},
-	[5] = {2, 1, {1752, 2983, 90000}, 2, {50055, 23368, 26029}},
-	[6] = {2, 1, {1752, 2983, 90000}, 2, {50055, 23368, 26029}}
+	[2] = {{1, 2}, 1, {90008, 0, 0}, 2, {23368, 26029}},
+	[3] = {{2}, 2, {50055, 23368, 26029}},
+	[4] = {{1, 2}, 1, {90010, 0, 0}, 2, {23368, 26029, 0}},
+	[5] = {{1, 2}, 1, {90000, 0, 0}, 2, {50055, 23368, 0}},
+	[6] = {{1, 2}, 1, {90011, 90009, 0}, 2, {23368, 50055, 26029}}
 }
 
 local function PLAYER_EVENT_ON_LEVEL_CHANGE(event, player, oldLevel)
@@ -18,23 +18,30 @@ local function PLAYER_EVENT_ON_LEVEL_CHANGE(event, player, oldLevel)
 	if not t then
 		return
 	end
-	local numTypes = t[1];
 	local results = {}
 	for i=1,3 do
-		local _type = math.random(1, t[1])
-		local values = t[(_type * 2) + 1]
 		local inserted = false
 		while not inserted do
+			local _type = t[1][math.random(1, #t[1])]
+			local values = t[(_type * 2) + 1]
+			if not values then
+				values = t[3]
+			end
 			local val = values[math.random(1, #values)]
 			local valid = true
-			for _,v in pairs(results) do
-				if (v[1] == _type and v[2] == val) then
-					valid = false
+			if val ~= 0 then
+				for _,v in pairs(results) do
+					if v[1] == _type and v[2] == val then
+						valid = false
+					end
+					if v[1] == 1 and player:HasSpell(v[2]) then
+						valid = false
+					end
 				end
-			end
-			if valid then
-				table.insert(results, {_type, val})
-				inserted = true
+				if valid then
+					table.insert(results, {_type, val})
+					inserted = true
+				end
 			end
 		end
 	end

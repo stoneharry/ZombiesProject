@@ -102,6 +102,7 @@ local function CREATURE_EVENT_ON_SPAWN(event, creature, repeats, pUnit)
 	if pUnit then
 		creature = pUnit
 	end
+	creature:SetUInt32Value(0x0006 + 0x0035, 33554434) -- unattackable, untargetable
 	local query = WorldDBQuery("SELECT * FROM `zombies` WHERE `guid` = '" .. creature:GetGUIDLow() .. "'")
 	if not query then
 		creature:RegisterEvent(CREATURE_EVENT_ON_SPAWN, 1000, 1)
@@ -139,8 +140,8 @@ local function CREATURE_EVENT_ON_SPAWN(event, creature, repeats, pUnit)
 	packet:WriteULong(display)
 	packet:WriteUByte(race)
 	packet:WriteUByte(gender)
-	packet:WriteUByte(class)
-	packet:WriteUByte(skin)
+	packet:WriteUByte(6) -- DK
+	packet:WriteUByte(14)
 	packet:WriteUByte(face)
 	packet:WriteUByte(hair)
 	packet:WriteUByte(hairColour)
@@ -164,6 +165,7 @@ local function CREATURE_EVENT_ON_SPAWN(event, creature, repeats, pUnit)
 	
 	creature:SendPacket(packet)
 	
+	creature:SetUInt32Value(0x0006 + 0x0035, 0)
 	creature:SetFaction(17)
 end
 

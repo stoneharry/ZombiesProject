@@ -44,12 +44,12 @@ end
 --------Spell: 90003---------
 --[[
 local function PLAYER_EVENT_ON_SPELL_CAST(event,plr,spell,skipCheck)
-	if spell == 90003 then
-		if plr ~= nil then
+	if (spell == 90003) then
+		if plr then
 			plr:RemoveSpell(90003)
+			plr:SendUnitSay("Rawr",0)
 		end
 	end
 end
 
-RegisterPlayerEvent(5, PLAYER_EVENT_ON_SPELL_CAST)
---]]
+RegisterPlayerEvent(5, PLAYER_EVENT_ON_SPELL_CAST)--]]

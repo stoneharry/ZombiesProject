@@ -17,7 +17,7 @@ local function OnEnterFrame(self, motion)
 	GameTooltip:Hide()
 	GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
 	if (self.type == 1) then
-		GameTooltip:SetSpellByID(self.id)
+		GameTooltip:SetHyperlink("spell:"..self.id)
 	elseif (self.type == 2) then
 		GameTooltip:SetHyperlink("item:"..self.id)
 		local itemName, itemLink, itemRarity, itemLevel, itemMinLevel, itemType, itemSubType,
