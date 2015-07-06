@@ -19,6 +19,9 @@ local function ZombieTicker(eventId, delay, repeats, pUnit)
 	if currentTime > 10000 then
 		currentTime = 0
 		spawnZombies(pUnit, 1, zombieMinionID)
+		if pUnit:GetHealthPct() < 50 then
+			pUnit:CastSpell(pUnit, 70509, true) -- visual
+		end
 	else
 		currentTime = currentTime + delay
 	end
@@ -34,7 +37,6 @@ local function crystalEvents(event, pUnit, target)
 		pUnit:SetReactState(0)
 	elseif event == 4 then
 		pUnit:RemoveEvents()
-		pUnit:CastSpell(pUnit, 70509, true) -- visual
 	else
 		return false
 	end

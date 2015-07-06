@@ -39,8 +39,8 @@ local function VisualDummySpawn(event, pUnit)
 	else
 		pUnit:RegisterEvent(RenewVisualOrb, 5000, 0)
 		pUnit:SetUInt32Value(0x0006 + 0x0035, 33554434)
-
 	end
+	pUnit:SetRooted(true)
 end
 
 RegisterCreatureEvent(90009, 5, VisualDummySpawn)
@@ -53,6 +53,7 @@ end
 local function ProtectorSpawn(event, pUnit)
 	pUnit:SetUInt32Value(0x0006 + 0x0035, 2) -- unattackable
 	pUnit:RegisterEvent(ProtectorTick, 10000, 0)
+	pUnit:SetRooted(true)
 end
 
 RegisterCreatureEvent(90010, 5, ProtectorSpawn)

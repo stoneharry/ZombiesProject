@@ -5,9 +5,9 @@ local CHOICE_TABLE = {
 	--		2: Item
 	-- [level] = { { type, ID, chance }, ... }
 	[2] = {
-		{1, 90008, 100},
-		{2, 23368, 100},
-		{2, 26029, 100}
+		{2, 26029, 100},
+		{1, 90018, 100},
+		{2, 23368, 100}
 	},
 	[3] = {
 		{2, 50055, 100},
@@ -15,13 +15,13 @@ local CHOICE_TABLE = {
 		{2, 26029, 100}
 	},
 	[4] = {
-		{1, 90010, 100},
 		{2, 23368, 100},
+		{1, 90010, 100},
 		{2, 26029, 100}
 	},
 	[5] = {
-		{1, 90000, 100},
 		{2, 50055, 100},
+		{1, 90000, 100},
 		{2, 23368, 100}
 	},
 	[6] = {
@@ -32,13 +32,18 @@ local CHOICE_TABLE = {
 		{2, 26029, 33}
 	},
 	[7] = {
-		{1, 90019, 100},
 		{2, 23368, 100},
+		{1, 90019, 100},
 		{2, 26029, 100}
 	},
 	[8] = {
-		{1, 90020, 100},
 		{2, 23368, 100},
+		{1, 90020, 100},
+		{2, 26029, 100}
+	},
+	[9] = {
+		{2, 23368, 100},
+		{1, 90008, 100},
 		{2, 26029, 100}
 	}
 }
@@ -76,6 +81,7 @@ local function PLAYER_EVENT_ON_LEVEL_CHANGE(event, player, oldLevel)
 					inserted = true
 				end
 			end
+			position = position + 1
 		end
 	end
 	
@@ -167,6 +173,7 @@ local function PLAYER_EVENT_ON_FIRST_LOGIN(event, plr)
 			end
 		end
 	end
+	plr:SetReputation(529, 3000) -- argent dawn
 end
 
 RegisterPlayerEvent(30, PLAYER_EVENT_ON_FIRST_LOGIN)
