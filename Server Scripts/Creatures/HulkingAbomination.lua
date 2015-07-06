@@ -2,12 +2,12 @@
 local zombieMinionID = 90000
 local timePassed = {}
 
-local function spawnZombies(pUnit, number)
+function spawnZombies(pUnit, number, id)
 	local map = pUnit:GetMap()
 	for i=1,number do
 		local x = pUnit:GetX() + math.random(-15, 15)
 		local y = pUnit:GetY() + math.random(-15, 15)
-		pUnit:SpawnCreature(zombieMinionID, x, y, map:GetHeight(x, y), 0, 6, 5000)
+		pUnit:SpawnCreature(id, x, y, map:GetHeight(x, y), 0, 6, 5000)
 	end
 end
 
@@ -15,7 +15,7 @@ local function ZombieTicker(eventId, delay, repeats, pUnit)
 	local map = pUnit:GetMap()
 	local t = pUnit:GetNearObjects(40, 0, zombieMinionID)
 	for _,v in pairs(t) do
-		if v and v:IsStopped() and v:GetFaction() == 17 then
+		if v and v:IsStopped() and v:GetFaction() == 17 and not v:IsInCombat() and pUnit:GetDistance2d(v) < 50 then
 			local x = pUnit:GetX() + math.random(-15, 15)
 			local y = pUnit:GetY() + math.random(-15, 15)
 			v:MoveTo(0, x, y, map:GetHeight(x, y))
@@ -27,7 +27,7 @@ local function ZombieTicker(eventId, delay, repeats, pUnit)
 	end
 	if currentTime > 10000 then
 		currentTime = 0
-		spawnZombies(pUnit, 1)
+		spawnZombies(pUnit, 1, zombieMinionID)
 	else
 		currentTime = currentTime + delay
 	end
@@ -52,15 +52,15 @@ local function ZombieMaster(event, pUnit, extra)
 		if target then
 			for _,v in pairs(t) do
 				if v then
-					v:AttackStart()
+					v:AttackStart(target)
 				end
 			end
 		end
-		spawnZombies(pUnit, 2)
+		spawnZombies(pUnit, 2, zombieMinionID)
 	elseif event == 2 then -- leave combat
 		--pUnit:RemoveEvents()
 	elseif event == 3 then -- target died
-		spawnZombies(pUnit, 2)
+		spawnZombies(pUnit, 2, zombieMinionID)
 	elseif event == 4 then -- died
 		pUnit:RemoveEvents()
 	elseif event == 5 then -- spawned
@@ -80,7 +80,7 @@ i = nil
 ---------------------------
 
 local function LoseHealth(eventId, delay, repeats, pUnit)
-	pUnit:CastSpell(pUnit, 90004, true) -- DAMAGE SELF -- TODO
+	pUnit:CastSpell(pUnit, 90004, true) -- DAMAGE SELF
 end
 
 local function SetHostile(eventId, delay, repeats, pUnit)

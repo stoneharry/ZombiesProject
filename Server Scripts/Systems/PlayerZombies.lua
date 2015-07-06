@@ -171,14 +171,14 @@ end
 
 RegisterCreatureEvent(90008, 5, CREATURE_EVENT_ON_SPAWN)
 
---[[local function DESPAWN_SELF(event, creature, repeats, pUnit)
-	pUnit:RemoveCorpse()
-end]]
+local function DESPAWN_SELF(event, creature, repeats, pUnit)
+	pUnit:DeleteFromDB()
+end
 
 local function CREATURE_EVENT_ON_DIED(event, creature, killer)
 	WorldDBQuery("DELETE FROM `zombies` WHERE `guid` = '" .. creature:GetGUIDLow() .. "'")
 	WorldDBQuery("DELETE FROM `creature` WHERE `guid` = '" .. creature:GetGUIDLow() .. "'")
-	--creature:RegisterEvent(DESPAWN_SELF, 5000, 1)
+	creature:RegisterEvent(DESPAWN_SELF, 5000, 1)
 end
 
 RegisterCreatureEvent(90008, 4, CREATURE_EVENT_ON_DIED)

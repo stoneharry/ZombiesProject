@@ -28,6 +28,12 @@ local function eventHandlerMainFrame(self, event, message, _, Type, Sender)
 			local t = scen_split(fullMessage)
 			toggleSelectionFrame(t)
 		end
+	elseif (event == "PLAYER_ENTERING_WORLD") then
+		if (ChatFrame1.editBox.language == GetLanguageByIndex(1)) then
+			ChatFrame1.editBox.language = GetLanguageByIndex(2)
+		else
+			ChatFrame1.editBox.language = GetLanguageByIndex(1)
+		end
 	end
 end
 
