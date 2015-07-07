@@ -21,7 +21,7 @@ function AccountLogin_OnLoad(self)
 	self:RegisterEvent("SCANDLL_FINISHED");
 
 	--local versionType, buildType, version, internalVersion, date = GetBuildInfo();
-	AccountLoginVersion:SetFormattedText("ZombieWorld 1.0");
+	AccountLoginVersion:SetFormattedText("Light's Dawn Beta");
 
 	-- Color edit box backdrops
 	local backdropColor = DEFAULT_TOOLTIP_COLOR;

@@ -7,6 +7,9 @@ local function PLAYER_EVENT_ON_REPOP(event, plr)
 	if not plr then
 		return
 	end
+	if plr:GetLevel() < 5 or plr:IsGM() then
+		return
+	end
 	local mapID = plr:GetMap():GetMapId()
 	local zombie = PerformIngameSpawn(1, 90008, mapID, 0, plr:GetX(), plr:GetY(), plr:GetZ(), plr:GetO(), true)
 	local GUID = zombie:GetGUIDLow()
@@ -178,7 +181,7 @@ end
 local function CREATURE_EVENT_ON_DIED(event, creature, killer)
 	WorldDBQuery("DELETE FROM `zombies` WHERE `guid` = '" .. creature:GetGUIDLow() .. "'")
 	WorldDBQuery("DELETE FROM `creature` WHERE `guid` = '" .. creature:GetGUIDLow() .. "'")
-	creature:RegisterEvent(DESPAWN_SELF, 5000, 1)
+	creature:RegisterEvent(DESPAWN_SELF, 20000, 1)
 end
 
 RegisterCreatureEvent(90008, 4, CREATURE_EVENT_ON_DIED)

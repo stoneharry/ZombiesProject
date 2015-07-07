@@ -172,8 +172,8 @@ local function PLAYER_EVENT_ON_FIRST_LOGIN(event, plr)
 				end
 			end
 		end
+		plr:SetReputation(529, 3000) -- argent dawn
 	end
-	plr:SetReputation(529, 3000) -- argent dawn
 end
 
 RegisterPlayerEvent(30, PLAYER_EVENT_ON_FIRST_LOGIN)

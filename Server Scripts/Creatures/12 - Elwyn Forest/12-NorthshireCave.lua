@@ -52,7 +52,7 @@ local function QuestGossipCont(event, player, pUnit)
 		elseif choice == 5 then
 			message = "Darkness begone!"
 		end
-		pUnit:SendChatMessageToPlayer(1, 0, message, player)
+		pUnit:SendChatMessageToPlayer(0, message, player)
 		pUnit:RegisterEvent(MoveOutOfCave, 3000, 1)
 		player:QuestKillCredit(90016)
 	else
@@ -65,7 +65,7 @@ local function QuestGossipCont(event, player, pUnit)
 		elseif choice == 3 then
 			message = "Help... me..."
 		end
-		pUnit:SendChatMessageToPlayer(1, 0, message, player)
+		pUnit:SendChatMessageToPlayer(0, message, player)
 	end
 end
 
