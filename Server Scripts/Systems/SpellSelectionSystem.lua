@@ -15,14 +15,14 @@ local CHOICE_TABLE = {
 		{2, 26029, 100}
 	},
 	[4] = {
-		{2, 23368, 100},
+		{1, 90015, 100},
 		{1, 90010, 100},
-		{2, 26029, 100}
+		{1, 90013, 100}
 	},
 	[5] = {
-		{2, 50055, 100},
+		{1, 90014, 100},
 		{1, 90000, 100},
-		{2, 23368, 100}
+		{1, 90024, 100}
 	},
 	[6] = {
 		{1, 90011, 100},
@@ -32,20 +32,25 @@ local CHOICE_TABLE = {
 		{2, 26029, 33}
 	},
 	[7] = {
-		{2, 23368, 100},
+		{1, 90025, 100},
 		{1, 90019, 100},
-		{2, 26029, 100}
+		{1, 90026, 100}
 	},
 	[8] = {
-		{2, 23368, 100},
+		{1, 90016, 100},
 		{1, 90020, 100},
-		{2, 26029, 100}
+		{1, 90017, 100}
 	},
 	[9] = {
 		{2, 23368, 100},
 		{1, 90008, 100},
 		{2, 26029, 100}
 	}
+}
+
+local unlearnTable = {
+	-- When learning [spellID] unlearn spellID
+	[90024] = 90007
 }
 
 local function PLAYER_EVENT_ON_LEVEL_CHANGE(event, player, oldLevel)
@@ -138,6 +143,10 @@ function SelectLevelReward(plr, msg)
 		local optionVal = t["option"..tostring(option)]
 		local optionType = t["type"..tostring(option)]
 		if (optionType == 1) then
+			local unlearn = unlearnTable[optionVal]
+			if unlearn then
+				plr:RemoveSpell(unlearn)
+			end
 			plr:LearnSpell(optionVal)
 		elseif (optionType == 2) then
 			plr:AddItem(optionVal, 1)

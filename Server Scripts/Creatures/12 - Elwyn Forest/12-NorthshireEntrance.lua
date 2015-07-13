@@ -112,6 +112,9 @@ end
 local function SpiritwindOnSelect(event, player, pUnit, sender, initid, code)
 	player:GossipComplete()
 	if (initid == 1) then
+		if player:HasQuest(90003) then
+			player:QuestKillCredit(90006)
+		end
 		pUnit:SendUnitSay("By Elune, begone!",0)
 		pUnit:CastSpell(pUnit, 53199)
 		button = true
