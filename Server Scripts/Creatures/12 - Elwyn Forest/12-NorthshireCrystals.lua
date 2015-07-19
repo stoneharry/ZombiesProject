@@ -56,7 +56,7 @@ end
 
 local function SetHostile(eventId, delay, repeats, pUnit)
 	pUnit:SetFaction(17)
-	pUnit:SetUInt32Value(0x0006 + 0x0035, 0) -- attackable, targetable
+	pUnit:SetUInt32Value(UNIT_FIELD_FLAGS, 0) -- attackable, targetable
 end
 
 local function SetDisplay(eventId, delay, repeats, pUnit)
@@ -64,13 +64,13 @@ local function SetDisplay(eventId, delay, repeats, pUnit)
 end
 
 local function SpawnFromGround(eventId, delay, repeats, pUnit)
-	pUnit:SetUInt32Value(0x0006 + 0x0044, 0) -- above ground
+	pUnit:SetUInt32Value(UNIT_FIELD_BYTES_1, 0) -- above ground
 	pUnit:RegisterEvent(SetHostile, 4000, 1)
 end
 
 local function ZombieMinion(event, pUnit, extra)
-	pUnit:SetUInt32Value(0x0006 + 0x0035, 33554434) -- unattackable, untargetable
-	pUnit:SetUInt32Value(0x0006 + 0x0044, 9) -- underground
+	pUnit:SetUInt32Value(UNIT_FIELD_FLAGS, UNIT_FIELD_FLAG_UNTARGETABLE + UNIT_FIELD_FLAG_UNATTACKABLE) -- unattackable, untargetable
+	pUnit:SetUInt32Value(UNIT_FIELD_BYTES_1, 9) -- underground
 	pUnit:RegisterEvent(SpawnFromGround, 2000, 1)
 	pUnit:RegisterEvent(SetDisplay, 1000, 1)
 	pUnit:RegisterEvent(LoseHealth, 1000, 0)

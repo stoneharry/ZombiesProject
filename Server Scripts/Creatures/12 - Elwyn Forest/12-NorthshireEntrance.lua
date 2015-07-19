@@ -32,7 +32,7 @@ local function SpawnZombie(eventId, delay, repeats, pUnit)
 end
 
 local function VisualDummySpawn(event, pUnit)
-	pUnit:SetUInt32Value(0x0006 + 0x0035, 33554434) -- untargetable, unattackable
+	pUnit:SetUInt32Value(UNIT_FIELD_FLAGS, UNIT_FIELD_FLAG_UNTARGETABLE + UNIT_FIELD_FLAG_UNATTACKABLE) -- untargetable, unattackable
 	if pUnit:GetEntry() == 90009 then
 		pUnit:RegisterEvent(RenewVisual, 1000, 0)
 		pUnit:RegisterEvent(SpawnZombie, 1500, 0)
@@ -51,7 +51,7 @@ local function ProtectorTick(eventId, delay, repeats, pUnit)
 end
 
 local function ProtectorSpawn(event, pUnit)
-	pUnit:SetUInt32Value(0x0006 + 0x0035, 2) -- unattackable
+	pUnit:SetUInt32Value(UNIT_FIELD_FLAGS, UNIT_FIELD_FLAG_UNATTACKABLE) -- unattackable
 	pUnit:RegisterEvent(ProtectorTick, 10000, 0)
 	pUnit:SetRooted(true)
 end
@@ -61,7 +61,7 @@ RegisterCreatureEvent(90010, 5, ProtectorSpawn)
 
 local function SetHostile(eventId, delay, repeats, pUnit)
 	pUnit:SetFaction(17)
-	pUnit:SetUInt32Value(0x0006 + 0x0035, 0) -- attackable, targetable
+	pUnit:SetUInt32Value(UNIT_FIELD_FLAGS, 0) -- attackable, targetable
 	pUnit:MoveTo(0, -9053, -44, 88.35)
 end
 
@@ -70,13 +70,13 @@ local function SetDisplay(eventId, delay, repeats, pUnit)
 end
 
 local function SpawnFromGround(eventId, delay, repeats, pUnit)
-	pUnit:SetUInt32Value(0x0006 + 0x0044, 0) -- above ground
+	pUnit:SetUInt32Value(UNIT_FIELD_BYTES_1, 0) -- above ground
 	pUnit:RegisterEvent(SetHostile, 4000, 1)
 end
 
 local function ZombieMinion(event, pUnit, extra)
-	pUnit:SetUInt32Value(0x0006 + 0x0035, 33554434) -- unattackable, untargetable
-	pUnit:SetUInt32Value(0x0006 + 0x0044, 9) -- underground
+	pUnit:SetUInt32Value(UNIT_FIELD_FLAGS, UNIT_FIELD_FLAG_UNTARGETABLE + UNIT_FIELD_FLAG_UNATTACKABLE) -- unattackable, untargetable
+	pUnit:SetUInt32Value(UNIT_FIELD_BYTES_1, 9) -- underground
 	pUnit:RegisterEvent(SpawnFromGround, 2000, 1)
 	pUnit:RegisterEvent(SetDisplay, 1000, 1)
 end
@@ -90,7 +90,7 @@ local function CastSpellStarFall(eventID,delay,repeats,pUnit)
 end
 
 local function KillerDummy(event,pUnit,extra)
-	pUnit:SetUInt32Value(0x0006 + 0x0035, 33554434)
+	pUnit:SetUInt32Value(UNIT_FIELD_FLAGS, UNIT_FIELD_FLAG_UNTARGETABLE + UNIT_FIELD_FLAG_UNATTACKABLE)
 	pUnit:RegisterEvent(CastSpellStarFall,1000,0)
 end
 
@@ -120,17 +120,6 @@ local function SpiritwindOnSelect(event, player, pUnit, sender, initid, code)
 		button = true
 		xi = 0
 		local killer = pUnit:SpawnCreature(90007, -9078,-48,88,0,2,8000)
-		--[[if killer then
-			local z = killer:GetNearObjects(40, 0, 90011)
-			for _,v in pairs(z) do
-				if v then
-					v:RemoveEvents()
-					v:SetUInt32Value(0x0006 + 0x0035, 0)
-					v:SetFaction(17)
-					v:CastSpell(v,50286,true)
-				end
-			end
-		end--]]
 	end
 end
 

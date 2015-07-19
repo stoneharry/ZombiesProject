@@ -1,3 +1,12 @@
+
+function GetCreature(range, id, pUnit)
+	local t = pUnit:GetCreaturesInRange(range, id)
+	if not t then
+		return nil
+	end
+	return t[1]
+end
+
 function sendAddonMessage(plr, msg, packet)
 	local splitLength = 240
 	local splits = math.ceil(msg:len() / splitLength)
@@ -38,18 +47,3 @@ function scen_split(str)
 	end
 	return d
 end
-
------------------------------
---Testing deletion of spell--
---------Spell: 90003---------
---[[
-local function PLAYER_EVENT_ON_SPELL_CAST(event,plr,spell,skipCheck)
-	if (spell == 90003) then
-		if plr then
-			plr:RemoveSpell(90003)
-			plr:SendUnitSay("Rawr",0)
-		end
-	end
-end
-
-RegisterPlayerEvent(5, PLAYER_EVENT_ON_SPELL_CAST)--]]
