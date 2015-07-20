@@ -3,11 +3,22 @@ local T = {};
 local ArmorSlots = {0, 2, 3, 4, 5, 6, 7, 8, 9, 14, 18}; -- #11
 local WeaponSlots = {15, 16, 17}; -- #3
 
+local function isInCity(plr)
+	if plr:GetZoneId() == 1519 then -- stormwind
+		return true
+	end
+	return false
+end
+
 local function PLAYER_EVENT_ON_REPOP(event, plr)
 	if not plr then
 		return
 	end
+	plr:RemoveAura(90006) -- scourge controlled zone
 	if plr:GetLevel() < 5 or plr:IsGM() then
+		return
+	end
+	if isInCity(plr) then
 		return
 	end
 	local mapID = plr:GetMap():GetMapId()
