@@ -1,4 +1,3 @@
--- AUTOMATICALLY GENERATED -- DO NOT EDIT!
 
 ABILITY_INFO_BLOODELF1 = "- Enchanting skill increased.";
 ABILITY_INFO_BLOODELF2 = "- May restore mana, energy, or runic power.";
@@ -779,7 +778,7 @@ SERVER_ALERT_BETA_URL = "";
 SERVER_ALERT_BUTTON_TEXT = "More Info";
 SERVER_ALERT_PTR_URL = "";
 SERVER_ALERT_TITLE = "Breaking News";
-SERVER_ALERT_URL = "";
+SERVER_ALERT_URL = "http://www.lightsdawn.net/wow/alert";
 SERVER_DOWN = "Server down";
 SERVER_SELECTION = "Realm Selection";
 SERVER_SPLIT = "This realm has exceeded maximum capacity, and will be undergoing a realm split with players divided between two new realms. You will be able to select which of the two new realms you prefer up until |cffffffff%s|r when the split lockout occurs. If you do not make a selection, you will be assigned to one of the new realms. For more information, visit www.worldofwarcraft.com.\n\nPlease select your new realm preference below. You may change your selection at any time until the lockout date.";
