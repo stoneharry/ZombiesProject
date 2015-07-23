@@ -1,5 +1,6 @@
 
 local spawnPlaces = {}
+local lastTime = {}
 
 local function KeepVisualUp(event, delay, repeats, pUnit)
 	pUnit:CastSpell(pUnit, 39947, true)
@@ -35,6 +36,13 @@ local function MoveOutOfCave(event, delay, repeats, pUnit)
 	pUnit:RegisterEvent(RespawnSoon, 6000, 1)
 end
 
+local function AdvanceQuestCredit(e, d, r, pUnit)
+	local plr = pUnit:GetNearestPlayer(15)
+	if plr then
+		plr:QuestKillCredit(90016)
+	end
+end
+
 local function QuestGossipCont(event, player, pUnit)
 	if player:HasQuest(90001) then
 		pUnit:SetNPCFlags(0)
@@ -56,7 +64,7 @@ local function QuestGossipCont(event, player, pUnit)
 		end
 		pUnit:SendChatMessageDirectlyToPlayer(message, 12, 0, player, player)
 		pUnit:RegisterEvent(MoveOutOfCave, 3000, 1)
-		player:QuestKillCredit(90016)
+		pUnit:RegisterEvent(AdvanceQuestCredit, 1000, 1)
 	else
 		local message
 		local choice = math.random(1,3)

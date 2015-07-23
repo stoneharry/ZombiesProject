@@ -7,10 +7,14 @@ local function OnClickedFrame(self, button)
 	if self.selected then
 		return
 	end
-	self.selected = true
-	SendAddonMessage("SELECT", tostring(self.option), "WHISPER", UnitName("player"))
-	ChainFrame(self:GetParent(), 0)
-	PlaySoundFile("Interface\\FrameXML\\up.wav") 
+	if IsControlKeyDown() then
+		DressUpItemLink("item:"..self.id)
+	else
+		self.selected = true
+		SendAddonMessage("SELECT", tostring(self.option), "WHISPER", UnitName("player"))
+		ChainFrame(self:GetParent(), 0)
+		PlaySoundFile("Interface\\FrameXML\\up.wav")
+	end
 end
 
 local function OnEnterFrame(self, motion)

@@ -136,8 +136,7 @@ function SelectLevelReward(plr, msg)
 	if not option or option < 1 or option > 3 then
 		return
 	end
-	local level = plr:GetLevel()
-	local result = CharDBQuery("SELECT * FROM `spellselectionsystem` WHERE `guid` = '"..plr:GetGUIDLow().."' AND `level` = '"..level.."'")
+	local result = CharDBQuery("SELECT * FROM `spellselectionsystem` WHERE `guid` = '"..plr:GetGUIDLow().."' AND selected IS NULL ORDER BY `level` ASC LIMIT 1")
 	if result then
 		local t = result:GetRow()
 		if t["selected"] then
@@ -154,7 +153,7 @@ function SelectLevelReward(plr, msg)
 		elseif (optionType == 2) then
 			plr:AddItem(optionVal, 1)
 		end
-		CharDBQuery("UPDATE `spellselectionsystem` SET `selectedType` = '"..tostring(optionType).."', `selected` = '"..tostring(optionVal).."' WHERE `guid` = '"..plr:GetGUIDLow().."' AND `level` = '"..level.."'")
+		CharDBQuery("UPDATE `spellselectionsystem` SET `selectedType` = '"..tostring(optionType).."', `selected` = '"..tostring(optionVal).."' WHERE `guid` = '"..plr:GetGUIDLow().."' AND `level` = '"..t["level"].."'")
 	end
 end
 
@@ -189,3 +188,24 @@ local function PLAYER_EVENT_ON_FIRST_LOGIN(event, plr)
 end
 
 RegisterPlayerEvent(30, PLAYER_EVENT_ON_FIRST_LOGIN)
+
+local function PLAYER_EVENT_ON_LOGIN(event, plr)
+	if plr then
+		local lowGUID = plr:GetGUIDLow()
+		local q = CharDBQuery("SELECT * FROM spellselectionsystem WHERE selected IS NULL AND guid = '"..lowGUID.."' ORDER BY `level` ASC LIMIT 1")
+		if q then
+			local t = q:GetRow()
+			
+			local message = "LEVELUP-" .. string.format("%02d", t["level"])
+			for i=1,3 do
+				message = message .. "-" ..  string.format("%01d", t["type"..tostring(i)])
+				message = message .. "-" ..  string.format("%06d", t["option"..tostring(i)])
+			end
+			
+			sendAddonMessage(plr, message, 1)
+		end
+	end
+end
+
+RegisterPlayerEvent(3, PLAYER_EVENT_ON_LOGIN)
+

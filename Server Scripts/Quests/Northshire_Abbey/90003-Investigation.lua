@@ -75,10 +75,10 @@ local function AI_TICKER(e, d, r, pUnit)
 		a:SetUInt32Value(UNIT_FIELD_FLAGS, 0)
 		b:SetUInt32Value(UNIT_FIELD_FLAGS, 0)
 		c:SetUInt32Value(UNIT_FIELD_FLAGS, 0)
-		pUnit:SetFaction(814)
+		--[[pUnit:SetFaction(814)
 		a:SetFaction(17)
 		b:SetFaction(17)
-		c:SetFaction(17)
+		c:SetFaction(17)]]
 		pUnit:AttackStart(c)
 		local plr = nil
 		for _,v in pairs(pUnit:GetPlayersInRange(40)) do
@@ -134,6 +134,8 @@ local function AI_TICKER(e, d, r, pUnit)
 		end
 		pUnit:RemoveEvents()
 		pUnit:DespawnOrUnsummon(0)
+		AI_TICK[tostring(pUnit:GetGUID())] = nil
+		return
 	end
 	AI_TICK[tostring(pUnit:GetGUID())] = i
 end
@@ -141,13 +143,16 @@ end
 local function FixGunner(e, d, r, pUnit)
 	local c = GetCreature(10, GUNNER, pUnit)
 	c:SetUInt32Value(UNIT_FIELD_BYTES_2, 2)
-	c:SetUInt32Value(UNIT_FIELD_FLAGS, 2)
+	c:SetUInt32Value(UNIT_FIELD_FLAGS, UNIT_FIELD_FLAG_C_UNATTACKABLE)
+	c:SetFaction(17)
 end
 
 local function CREATURE_SPAWN(event, pUnit)
 	local entry = pUnit:GetEntry()
-	pUnit:SetUInt32Value(UNIT_FIELD_FLAGS, UNIT_FIELD_FLAG_UNATTACKABLE)
+	pUnit:SetFaction(17)
+	pUnit:SetUInt32Value(UNIT_FIELD_FLAGS, UNIT_FIELD_FLAG_C_UNATTACKABLE)
 	if entry == DWARF then
+		pUnit:SetFaction(814)
 		AI_TICK[tostring(pUnit:GetGUID())] = 0
 		pUnit:RegisterEvent(AI_TICKER, 1000, 0)
 		pUnit:RegisterEvent(FixGunner, 3000, 1)
@@ -159,6 +164,7 @@ local function CREATURE_SPAWN(event, pUnit)
 	end
 end
 
+RegisterCreatureEvent(MAIN, 5, CREATURE_SPAWN)
 RegisterCreatureEvent(MAGE, 5, CREATURE_SPAWN)
 RegisterCreatureEvent(DWARF, 5, CREATURE_SPAWN)
 

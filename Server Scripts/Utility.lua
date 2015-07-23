@@ -1,8 +1,15 @@
 
 function GetCreature(range, id, pUnit)
 	local t = pUnit:GetCreaturesInRange(range, id)
-	if not t then
+	if not t or #t == 0 then
 		return nil
+	end
+	if #t > 1 then
+		for _,v in pairs(t) do
+			if v:GetPhaseMask() == pUnit:GetPhaseMask() then
+				return v
+			end
+		end
 	end
 	return t[1]
 end
