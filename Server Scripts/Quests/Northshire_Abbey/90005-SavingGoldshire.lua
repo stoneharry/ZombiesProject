@@ -267,6 +267,7 @@ local function AI_TICKER(e, d, r, pUnit)
 		local c = GetCreature(70, 90041, pUnit)
 		--c:SetCanFly(false)
 		--c:Kill(c)
+		c:SetHomePosition(c:GetX(), c:GetY(), c:GetZ(), c:GetO())
 		c:SetUInt32Value(UNIT_FIELD_BYTES_1, 7)
 		c:SetUInt32Value(UNIT_FIELD_FLAGS, UNIT_FIELD_FLAG_UNTARGETABLE)
 		c:DespawnOrUnsummon(10000)
@@ -284,11 +285,11 @@ local function AI_TICKER(e, d, r, pUnit)
 		end
 		local c = GetCreature(70, 90038, pUnit)
 		if c then
-			cRemoveEvents()
+			c:RemoveEvents()
 			c:DespawnOrUnsummon(0)
 		end
 		pUnit:Emote(1)
-		pUnit:SendUnitsay("Look at that, isn't it beautiful?", 0)
+		pUnit:SendUnitSay("Look at that, isn't it beautiful?", 0)
 	elseif i == 170 then
 		pUnit:SendUnitSay("Well, my work here is done. I'll see you back in the inn.", 0)
 		pUnit:Emote(1)
@@ -314,6 +315,18 @@ local function AI_TICKER(e, d, r, pUnit)
 				end
 			end
 			local t = pUnit:GetCreaturesInRange(70, 90037)
+			for _,v in pairs(t) do
+				if v:IsAlive() and v:GetPhaseMask() == pUnit:GetPhaseMask() then
+					v:DespawnOrUnsummon(0)
+				end
+			end
+			local t = pUnit:GetCreaturesInRange(70, 90039)
+			for _,v in pairs(t) do
+				if v:IsAlive() and v:GetPhaseMask() == pUnit:GetPhaseMask() then
+					v:DespawnOrUnsummon(0)
+				end
+			end
+			local t = pUnit:GetCreaturesInRange(70, 90040)
 			for _,v in pairs(t) do
 				if v:IsAlive() and v:GetPhaseMask() == pUnit:GetPhaseMask() then
 					v:DespawnOrUnsummon(0)

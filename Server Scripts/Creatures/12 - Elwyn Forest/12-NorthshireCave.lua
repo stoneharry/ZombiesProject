@@ -1,6 +1,5 @@
 
 local spawnPlaces = {}
-local lastTime = {}
 
 local function KeepVisualUp(event, delay, repeats, pUnit)
 	pUnit:CastSpell(pUnit, 39947, true)
