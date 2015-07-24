@@ -253,12 +253,11 @@ function SetCharacterRace(id)
 	local selectedButton;
 	for i=1, CharacterCreate.numRaces, 1 do
 		local button = _G["CharacterCreateRaceButton"..i];
+		_G["CharacterCreateRaceButton"..i.."Text"]:SetText(button.name);
 		if ( i == id ) then
-			_G["CharacterCreateRaceButton"..i.."Text"]:SetText(button.name);
 			button:SetChecked(1);
 			selectedButton = button;
 		else
-			_G["CharacterCreateRaceButton"..i.."Text"]:SetText("");
 			button:SetChecked(0);
 		end
 	end
