@@ -412,16 +412,6 @@
 								</Texture>
 							</Layer>
 							<Layer level="OVERLAY">
-								<FontString name="CharacterCreateAllianceLabel" inherits="FactionName_Shadow_Huge" text="ALLIANCE">
-									<Anchors>
-										<Anchor point="TOP" relativePoint="TOP" x="-50" y="-20"/>
-									</Anchors>
-								</FontString>
-								<FontString name="CharacterCreateHordeLabel" inherits="FactionName_Shadow_Huge" text="HORDE">
-									<Anchors>
-										<Anchor point="TOP" relativePoint="TOP" x="50" y="-20"/>
-									</Anchors>
-								</FontString>
 <!--
 
 								<FontString name="CharacterCreateAllianceRaceLabel" inherits="OptionsFontSmall"/>
@@ -444,7 +434,7 @@
 						<Frames>
 							<CheckButton name="CharacterCreateRaceButton1" inherits="CharacterCreateRaceButtonTemplate" id="1">
 								<Anchors>
-									<Anchor point="TOP" relativePoint="TOP" x="-50" y="-61"/>
+									<Anchor point="TOP" relativePoint="TOP" x="-50" y="-51"/>
 								</Anchors>
 							</CheckButton>
 							<CheckButton name="CharacterCreateRaceButton2" inherits="CharacterCreateRaceButtonTemplate" id="2">
@@ -469,7 +459,7 @@
 							</CheckButton>
 							<CheckButton name="CharacterCreateRaceButton6" inherits="CharacterCreateRaceButtonTemplate" id="6">
 								<Anchors>
-									<Anchor point="TOP" relativePoint="TOP" x="50" y="-61"/>
+									<Anchor point="TOP" relativePoint="TOP" x="50" y="-51"/>
 								</Anchors>
 							</CheckButton>
 							<CheckButton name="CharacterCreateRaceButton7" inherits="CharacterCreateRaceButtonTemplate" id="7">
