@@ -124,7 +124,7 @@ end
 
 function Utility.TervoshOnSelect(event, player, pUnit, sender, initid, code)
 	if (initid == 1) then
-		--pUnit:VendorRemoveAllItems(90005)
+		VendorRemoveAllItems(90005)
 		AddVendorItem(90005,22667,0,0,0)
 		player:SendListInventory(pUnit)
 	end

@@ -147,7 +147,8 @@ local function AI_TICKER(e, d, r, pUnit)
 			local c = GetCreature(30, 90055, pUnit)
 			c:Emote(1)
 			local race = plr:GetRaceAsString(0)
-			c:SendUnitSay("Now what do we have here? A mage living in the past trying to gain glory where there is none for him. And a "..race.." who is taking the first few steps into the real world. And would you look at this. They are trying to disrupt our advance on Goldshire? How very futile.", 0)
+			c:PlayDistanceSound(90000)
+			c:SendUnitSay("Now what do we have here? A mage living in the past trying to gain glory where there is none for him. And a "..race.." who is taking his first few steps into the real world. And would you look at this: they are trying to disrupt our advance on Goldshire? How very futile.", 0)
 		end
 	elseif i == 105 then
 		GetCreature(30, 90055, pUnit):CastSpell(pUnit, 42650)
@@ -162,6 +163,7 @@ local function AI_TICKER(e, d, r, pUnit)
 	elseif i == 108 then
 		local c = GetCreature(30, 90055, pUnit)
 		c:Emote(1)
+		c:PlayDistanceSound(90001)
 		c:SendUnitSay("The dead are endless. Give up. Die.", 0)
 	elseif i == 111 then
 		GetCreature(30, 90055, pUnit):CastSpell(pUnit, 42650)
@@ -175,6 +177,7 @@ local function AI_TICKER(e, d, r, pUnit)
 		end
 	elseif i == 114 then
 		local c = GetCreature(30, 90055, pUnit)
+		c:PlayDistanceSound(90002)
 		c:SendUnitSay("I grow impatient.", 0)
 		c:Emote(1)
 	elseif i == 116 then
@@ -194,6 +197,7 @@ local function AI_TICKER(e, d, r, pUnit)
 		pUnit:SendUnitSay("Another focus point is now active! We can do this!", 0)
 	elseif i == 121 then
 		local c = GetCreature(30, 90055, pUnit)
+		c:PlayDistanceSound(90003)
 		c:SendUnitSay("You think I will allow you to activate all three? Think again, mage.", 0)
 		c:Emote(1)
 	elseif i == 123 then
@@ -204,12 +208,12 @@ local function AI_TICKER(e, d, r, pUnit)
 		c:CastSpell(pUnit, 90031)
 	elseif i == 127 then
 		local c = GetCreature(30, 90055, pUnit)
-		c:SendUnitSay("Do you abandon hope yet?", 0)
 		c:CastSpell(pUnit, 42650)
+		c:SendUnitSay("Minions, come to me!", 0)
+		c:PlayDistanceSound(90004)
 	elseif i == 130 then
 		local c = GetCreature(30, 90055, pUnit)
 		if c:GetHealthPct() < 60 then
-			c:SendUnitSay("Minions, come to me!", 0)
 			c:CastSpell(pUnit, 42650)
 		else
 			i = i - 1
@@ -229,7 +233,14 @@ local function AI_TICKER(e, d, r, pUnit)
 			end
 			pUnit:CastSpell(pUnit, 52993)
 			c:Emote(5)
+			c:PlayDistanceSound(90005)
 			c:SendUnitSay("Don't think this is the end. Next time we fight it shall not be on your holy ground.", 0)
+			local t = pUnit:GetCreaturesInRange(40, 24207)
+			for _,v in pairs(t) do
+				if v:IsAlive() and v:GetPhaseMask() == pUnit:GetPhaseMask() then
+					v:Kill(v)
+				end
+			end
 		else
 			i = i - 1
 		end
