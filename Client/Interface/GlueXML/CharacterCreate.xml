@@ -201,17 +201,17 @@
 		<Frames>
 			<Frame name="CharacterCreateFrame" setAllPoints="true" enableMouse="true">
 				<Frames>
-					<Frame name="CharacterCreateWoWLogo" hidden="true">
+					<Frame name="CharacterCreateWoWLogo">
 						<Size x="256" y="128"/>
 						<Anchors>
-							<Anchor point="TOPRIGHT" x="-9" y="0"/>
+							<Anchor point="TOPRIGHT" x="-9" y="-5"/>
 						</Anchors>
 						<Layers>
 							<Layer level="ARTWORK">
 								<Texture name="CharacterCreateLogo" file="Interface\Glues\Common\Glues-WoW-WotLKLogo">
-									<Size x="256" y="128"/>
+									<Size x="200" y="200"/>
 									<Anchors>
-										<Anchor point="TOP" relativePoint="TOPLEFT" x="128" y="0"/>
+										<Anchor point="TOP" relativePoint="TOPRIGHT" x="-128" y="-5"/>
 									</Anchors>
 								</Texture>
 							</Layer>

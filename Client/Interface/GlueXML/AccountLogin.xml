@@ -383,6 +383,18 @@
 			<Frame name="AccountLoginUI" setAllPoints="true">
 				<Layers>
 					<Layer level="ARTWORK">
+						<Texture name="AccountLoginLogo" file="Interface\Glues\Common\Glues-WoW-WotLKLogo">
+							<Size>
+								<AbsDimension x="150" y="150"/>
+							</Size>
+							<Anchors>
+								<Anchor point="TOPLEFT">
+									<Offset>
+										<AbsDimension x="3" y="-7"/>
+									</Offset>
+								</Anchor>
+							</Anchors>
+						</Texture>
 						<FontString inherits="GlueFontNormalSmall" text="">
 							<Anchors>
 								<Anchor point="BOTTOM">
