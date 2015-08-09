@@ -414,7 +414,7 @@
 							</Anchors>
 						</FontString>
 					</Layer>
-                    <Layer level="OVERLAY">
+					<Layer level="OVERLAY">
 					</Layer>
 				</Layers>
 				<Frames>
