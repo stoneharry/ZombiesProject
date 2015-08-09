@@ -414,6 +414,8 @@
 							</Anchors>
 						</FontString>
 					</Layer>
+                    <Layer level="OVERLAY">
+					</Layer>
 				</Layers>
 				<Frames>
 					<EditBox name="AccountLoginAccountEdit" letters="320">
