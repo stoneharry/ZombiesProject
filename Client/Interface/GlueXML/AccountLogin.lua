@@ -21,7 +21,7 @@ function AccountLogin_OnLoad(self)
 	self:RegisterEvent("SCANDLL_FINISHED");
 
 	--local versionType, buildType, version, internalVersion, date = GetBuildInfo();
-	AccountLoginVersion:SetFormattedText("Light's Dawn Beta");
+	AccountLoginVersion:SetFormattedText("Light's Dawn Pre-Alpha");
 
 	-- Color edit box backdrops
 	local backdropColor = DEFAULT_TOOLTIP_COLOR;

@@ -390,7 +390,7 @@
 							<Anchors>
 								<Anchor point="TOPLEFT">
 									<Offset>
-										<AbsDimension x="3" y="-7"/>
+										<AbsDimension x="112" y="-7"/>
 									</Offset>
 								</Anchor>
 							</Anchors>
@@ -413,8 +413,6 @@
 								</Anchor>
 							</Anchors>
 						</FontString>
-					</Layer>
-					<Layer level="OVERLAY">
 					</Layer>
 				</Layers>
 				<Frames>
@@ -921,7 +919,7 @@
 						<Anchors>
 							<Anchor point="TOPLEFT">
 								<Offset>
-									<AbsDimension x="10" y="-130"/>
+									<AbsDimension x="10" y="-155"/>
 								</Offset>
 							</Anchor>
 						</Anchors>
