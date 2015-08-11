@@ -9,7 +9,7 @@ local function PerformSetup(_, _, _, pUnit)
 	end
 	-- boss bad guy
 	x, y, z = pUnit:GetRelativePoint(6.5, pUnit:GetO())
-	pUnit:SpawnCreature(90069, x, y, z + 3, 0):SetFacingToObject(pUnit)
+	pUnit:SpawnCreature(90069, x, y, z + 3, 320):SetFacingToObject(pUnit)
 end
 
 local function KeepVisual(_, _, _, pUnit)

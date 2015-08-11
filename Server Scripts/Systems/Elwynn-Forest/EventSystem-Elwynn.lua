@@ -14,13 +14,13 @@ local lastEvent = nil
 local function Event1()
 	PerformIngameSpawn(2, 400000, 0, 0, -9558.034, 83.45, 58.3, 5.998550)
 	PerformIngameSpawn(2, 177289, 0, 0, -9558.034, 83.45, 58.3, 5.998550)
-	PerformIngameSpawn(1, 90067, 0, 0, -9558.034, 83.45, 62, 5.998550)
+	PerformIngameSpawn(1, 90067, 0, 0, -9558.034, 83.45, 62, 5.998550, false, 0, 1, true)
 end
 
 local function Event2()
 	PerformIngameSpawn(2, 400000, 0, 0, -9449.98, -692.62, 63.6, 2.527031)
 	PerformIngameSpawn(2, 177289, 0, 0, -9449.98, -692.62, 63.6, 2.527031)
-	PerformIngameSpawn(1, 90067, 0, 0, -9449.98, -692.62, 66.6, 2.527031)
+	PerformIngameSpawn(1, 90067, 0, 0, -9449.98, -692.62, 66.6, 2.527031, false, 0, 1, true)
 end
 
 local POIS = {
@@ -31,6 +31,17 @@ local POIS = {
 local function zoneEvent(_, _, _)
 	if EVENT_DONE then	
 		if #POIS == 0 then
+			return
+		end
+		local _min, _max = GetResourceData(12)
+		if _min == _max then
+			local plrs = GetPlayersInMap(0, 0, 2)
+			for _,v in pairs(plrs) do
+				if v and v:GetZoneId() == 12 and not v:GetAreaId() == 24 then -- not in Northshire
+					v:GossipSendPOI(-9120, 390, 7, 6, 0, "Siege Point")
+					v:SendChatMessageDirectlyToPlayer("The siege on Stormwind is ready!", 41, 0, v, v)
+				end
+			end
 			return
 		end
 		local index = math.random(1, #POIS)

@@ -2,7 +2,9 @@
 local function argentAI(e, d, r, pUnit)
 	local t = pUnit:GetAITarget(1)
 	if t then
-		pUnit:SetRooted(pUnit:GetDistance2d(t) < 20)
+		if not GetCreature(20, 90071, pUnit) then
+			pUnit:SetRooted(pUnit:GetDistance2d(t) < 20)
+		end
 		local choice = math.random(1,3)
 		if choice == 1 then
 			pUnit:CastSpell(t, 205)
@@ -21,7 +23,9 @@ local function argent(event, pUnit, extra)
 	if event == 1 then
 		pUnit:RegisterEvent(argentAI, 100, 1)
 	else
-		pUnit:SetRooted(false)
+		if not GetCreature(20, 90071, pUnit) then
+			pUnit:SetRooted(false)
+		end
 		pUnit:RemoveEvents()
 	end
 end
