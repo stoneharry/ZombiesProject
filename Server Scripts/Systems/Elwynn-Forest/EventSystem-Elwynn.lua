@@ -66,7 +66,7 @@ local function zoneEvent(_, _, _)
 	end
 end
 
-CreateLuaEvent(zoneEvent, 60000, 0)
+CreateLuaEvent(zoneEvent, 45 * 60 * 1000, 0) -- every ~45mins
 
 local function PLAYER_EVENT_ON_UPDATE_ZONE(event, plr, newZone, newArea)
 	if newZone == 12 then

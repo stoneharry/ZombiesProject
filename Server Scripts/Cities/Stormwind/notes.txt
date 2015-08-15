@@ -1,0 +1,22 @@
+25698 -- display for AD
+
+25402 -- Giest
+
+~25422 -- Death Knight
+
+25452 -- Valkyr
+
+25454 -- Undead thing
+
+25468 -- Lich
+
+25498 -- Armoured skeleton
+
+25625,30403 -- Gargoyle
+
+25678 -- Dreadsteed
+
+30357 -- Tauren DK boss
+
+30404 -- Giant skull lich king thing
+

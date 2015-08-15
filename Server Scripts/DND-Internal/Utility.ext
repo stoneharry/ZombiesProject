@@ -1,4 +1,14 @@
 
+function Creature:ChannelSpell(target, id)
+	self:SetUInt64Value(UNIT_FIELD_CHANNEL_OBJECT, target:GetGUID());
+	self:SetUInt32Value(UNIT_CHANNEL_SPELL, id);
+end
+
+function Creature:StopChannel()
+	self:SetUInt64Value(UNIT_FIELD_CHANNEL_OBJECT, 0);
+	self:SetUInt32Value(UNIT_CHANNEL_SPELL, 0);
+end
+
 function GetCreature(range, id, pUnit)
 	local t = pUnit:GetCreaturesInRange(range, id)
 	if not t or #t == 0 then
