@@ -1,4 +1,8 @@
 
+function Creature:IsCasting()
+	return self:HasUnitState(0x00008000)
+end
+
 function Creature:ChannelSpell(target, id)
 	self:SetUInt64Value(UNIT_FIELD_CHANNEL_OBJECT, target:GetGUID());
 	self:SetUInt32Value(UNIT_CHANNEL_SPELL, id);

@@ -50,19 +50,36 @@ local function UpdateWorldStates(player)
 	player:UpdateWorldState(9014, 1) -- Sets max boss count
 end
 
-local function UpdateZonesWorldStates()
+local function UpdateZonesWorldStates(bool)
 	local killed = GetScourgeKilled()
 	if not killed then
 		return
 	end
 	local norm = #spawnData
-	for _,v in pairs(GetPlayersInMap(2)) do
+	if killed == norm and BossKilled == 1 then
+		SetSiegeStage(3)
+	end
+	for _,v in pairs(GetPlayersInMap(0, 0, 2)) do
 		if v:GetZoneId() == 1519 then
-			v:InitializeWorldState(901, 0, 0, 1)
+			if bool then
+				v:InitializeWorldState(901, 0, 0, 1)
+			end
 			v:UpdateWorldState(9011, killed) -- Sets current scourge count
 			v:UpdateWorldState(9012, norm) -- Sets max scourge count
 			v:UpdateWorldState(9013, BossKilled) -- Sets current boss count
 			v:UpdateWorldState(9014, 1) -- Sets max boss count
+		end
+	end
+end
+
+local function DespawnEvent2(_, _, _, pUnit)
+	if GetSiegeStage() >= 3 then
+		pUnit:RemoveEvents()
+		local t = {90077, 90066, 90064}
+		for _,id in pairs(t) do
+			for _,v in pairs(pUnit:GetCreaturesInRange(50, id)) do
+				v:DespawnOrUnsummon(0)
+			end
 		end
 	end
 end
@@ -94,7 +111,8 @@ local function CanMarketEventStart(_, _, _, pUnit)
 			end
 			pUnit:SpawnCreature(90081, -8833.2, 479.858, 109.7, 2.27) -- boss
 			pUnit:SpawnCreature(90083, -8815.9, 637.25, 94.3, 0) -- stage 2 end dummy
-			UpdateZonesWorldStates()
+			UpdateZonesWorldStates(true)
+			pUnit:RegisterEvent(DespawnEvent2, 5000, 0)
 		end
 	end
 end
@@ -182,6 +200,7 @@ local function Boss1(event, pUnit)
 	if event == 1 then
 		pUnit:SendUnitSay("Men, women, and children. None were spared the masters wrath. Your death will be no different.")
 		pUnit:PlayDirectSound(16710)
+		pUnit:PlayMusic(14930)
 		pUnit:RegisterEvent(FearStrike, 10000, 0)
 		pUnit:RegisterEvent(Phase2, 1000, 0)
 		pUnit:RegisterEvent(DeathAndDecay, 15000, 0)
@@ -296,8 +315,18 @@ local function TrashHandler(event, pUnit)
 		pUnit:SetRooted(false)
 		pUnit:RemoveEvents()
 		if event == 4 then
-			table.remove(Scourge, tostring(pUnit:GetGUID()))
-			UpdateZonesWorldStates()
+			local g = tostring(pUnit:GetGUID())
+			local index = 0
+			for k,v in pairs(Scourge) do
+				if v == g then
+					index = k
+					break
+				end
+			end
+			if index ~= 0 then
+				table.remove(Scourge, index)
+				UpdateZonesWorldStates()
+			end
 		end
 	end
 end
@@ -315,7 +344,9 @@ RegisterCreatureEvent(90078, 4, TrashHandler)
 
 local function OnUpdateZone(event, player)
     if (player:GetMapId() == 0) and (player:GetZoneId() == 1519) then
-		UpdateWorldStates(player)
+		if GetSiegeStage() == 2 then
+			UpdateWorldStates(player)
+		end
     end
 end
 

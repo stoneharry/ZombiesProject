@@ -3,22 +3,22 @@ local zombieMinionID = 90000
 local timePassed = {}
 
 function spawnZombies(pUnit, number, id)
-	local map = pUnit:GetMap()
+	--local map = pUnit:GetMap()
 	for i=1,number do
 		local x = pUnit:GetX() + math.random(-15, 15)
 		local y = pUnit:GetY() + math.random(-15, 15)
-		pUnit:SpawnCreature(id, x, y, map:GetHeight(x, y), 0, 6, 5000)
+		pUnit:SpawnCreature(id, x, y, pUnit:GetZ() + 1--[[map:GetHeight(x, y)]], 0, 6, 5000)
 	end
 end
 
 local function ZombieTicker(eventId, delay, repeats, pUnit)
-	local map = pUnit:GetMap()
+	--local map = pUnit:GetMap()
 	local t = pUnit:GetNearObjects(40, 0, zombieMinionID)
 	for _,v in pairs(t) do
 		if v and v:IsStopped() and v:GetFaction() == 17 and not v:IsInCombat() and pUnit:GetDistance2d(v) < 50 then
 			local x = pUnit:GetX() + math.random(-15, 15)
 			local y = pUnit:GetY() + math.random(-15, 15)
-			v:MoveTo(0, x, y, map:GetHeight(x, y))
+			v:MoveTo(0, x, y, pUnit:GetZ() + 1--[[map:GetHeight(x, y)]])
 		end
 	end
 	local currentTime = timePassed[tostring(pUnit:GetGUID())]

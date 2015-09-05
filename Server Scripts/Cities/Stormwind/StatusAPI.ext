@@ -1,7 +1,7 @@
 
 -- TODO: Convert this to MySQL
 
-local SIEGE_STAGE = 2
+local SIEGE_STAGE = 8
 
 function GetSiegeStage()
 	return SIEGE_STAGE
