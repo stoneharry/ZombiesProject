@@ -110,7 +110,6 @@ local function CanMarketEventStart(_, _, _, pUnit)
 				table.insert(Scourge, tostring(c:GetGUID()))
 			end
 			pUnit:SpawnCreature(90081, -8833.2, 479.858, 109.7, 2.27) -- boss
-			pUnit:SpawnCreature(90083, -8815.9, 637.25, 94.3, 0) -- stage 2 end dummy
 			UpdateZonesWorldStates(true)
 			pUnit:RegisterEvent(DespawnEvent2, 5000, 0)
 		end
@@ -359,6 +358,22 @@ local function CanMarketEndEvent(_, _, _, pUnit)
 		for _,v in pairs(pUnit:GetGameObjectsInRange(150, 187809)) do
 			v:SetByteValue(GAMEOBJECT_BYTES_1, 0, 0)
 		end
+		pUnit:SpawnCreature(90096, -8825.91, 629.5, 94.1, 3.882143)
+		for _,t in pairs(spawnData) do
+			-- What you see below is a DIRTY hackfix suggested by
+			-- Trinity because there is no proper way to do it.
+			local id
+			if math.random(1,2) == 1 then
+				id = 90064
+			else
+				id = 90066
+			end
+			local c = pUnit:SpawnCreature(id, t[2], t[3], t[4], t[5])
+			c:SetWanderRadius(15)
+			c:SetDefaultMovementType(1)
+			c:SetDeathState(1)
+			c:Respawn()
+		end
 		pUnit:RemoveEvents()
 	end
 end
@@ -368,4 +383,10 @@ local function DummySpawn2(event, pUnit)
 end
 
 RegisterCreatureEvent(90083, 5, DummySpawn2)
+
+local function SiegeGossip2(event, player, pUnit, _, intid)
+	player:GossipSendMenu(90002, pUnit)
+end
+
+RegisterCreatureGossipEvent(90096, 1, SiegeGossip2)
 

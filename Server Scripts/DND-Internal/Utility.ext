@@ -13,6 +13,10 @@ function Creature:StopChannel()
 	self:SetUInt32Value(UNIT_CHANNEL_SPELL, 0);
 end
 
+function Creature:GetCreature(range, id)
+	return GetCreature(range, id, self)
+end
+
 function GetCreature(range, id, pUnit)
 	local t = pUnit:GetCreaturesInRange(range, id)
 	if not t or #t == 0 then

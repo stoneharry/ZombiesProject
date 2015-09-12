@@ -1,25 +1,44 @@
 
 -- TODO: Convert this to MySQL
 
-local SIEGE_STAGE = 8
+local SIEGE_STAGE = 3
+--					Mage,  Park,  Cath,  Old_Town
+local BOSS_SLAIN = {false, false, false, false}
 
 function GetSiegeStage()
 	return SIEGE_STAGE
 end
 
-function SetSiegeStage(STAGE)
+function SetSiegeStage(STAGE, boss)
 	SIEGE_STAGE = STAGE
+	if boss then
+		BOSS_SLAIN[boss] = true
+	end
+end
+
+function GetSiegeCanSpawn(boss)
+	if boss and BOSS_SLAIN[boss] then
+		return true
+	end
+	return false
 end
 
 function TempOnChat(event, player, msg, Type, lang)
 	if not player:IsGM() then
 		return
 	end
-    if(msg == "#stage") then
+    if (msg == "#incStage") then
         SIEGE_STAGE = SIEGE_STAGE + 1
 		player:SendBroadcastMessage("Increased stage to: " .. tostring(SIEGE_STAGE) .. ".")
 		return false
-    end
+    elseif (msg == "#decStage") then
+		SIEGE_STAGE = SIEGE_STAGE - 1
+		player:SendBroadcastMessage("Decreased stage to: " .. tostring(SIEGE_STAGE) .. ".")
+		return false
+	elseif (msg == "#getStage") then
+		player:SendBroadcastMessage("Current stage: " .. tostring(SIEGE_STAGE) .. ".")
+		return false
+	end
 end
 
 RegisterPlayerEvent(18, TempOnChat)
