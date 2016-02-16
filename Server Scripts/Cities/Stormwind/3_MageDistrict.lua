@@ -104,7 +104,7 @@ local function BOSS_AI(event, pUnit)
 		end
 		SetSiegeStage(GetSiegeStage() + 1, 1)
 	elseif event == 5 then
-		if not GetSiegeCanSpawn(1) then
+		if GetSiegeCanSpawn(1) then
 			pUnit:DespawnOrUnsummon(0)
 			return
 		end
@@ -150,3 +150,24 @@ local function STRANGLE_SELF(event, pUnit)
 end
 
 RegisterCreatureEvent(90094, 5, STRANGLE_SELF)
+
+-- Rare elite
+
+local function BlowSelfUp(_, _, _, pUnit)
+	if pUnit:GetHealthPct() < 20 and not pUnit:IsCasting() then
+		pUnit:CastSpell(pUnit, 70903)
+	end
+end
+
+local function SISTER_PERSON(event, pUnit)
+	if event == 1 then
+		pUnit:CastSpell(pUnit, 69383, true)
+		pUnit:RegisterEvent(BlowSelfUp, 1000, 0)
+	else
+		pUnit:RemoveEvents()
+	end
+end
+
+RegisterCreatureEvent(90098, 1, SISTER_PERSON)
+RegisterCreatureEvent(90098, 2, SISTER_PERSON)
+RegisterCreatureEvent(90098, 4, SISTER_PERSON)

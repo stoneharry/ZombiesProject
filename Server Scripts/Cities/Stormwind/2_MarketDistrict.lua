@@ -358,6 +358,7 @@ local function CanMarketEndEvent(_, _, _, pUnit)
 		for _,v in pairs(pUnit:GetGameObjectsInRange(150, 187809)) do
 			v:SetByteValue(GAMEOBJECT_BYTES_1, 0, 0)
 		end
+		PerformIngameSpawn(2, 190237, 0, 0, -8824.18457, 630.956543, 94.06414, 3.792606)
 		pUnit:SpawnCreature(90096, -8825.91, 629.5, 94.1, 3.882143)
 		for _,t in pairs(spawnData) do
 			-- What you see below is a DIRTY hackfix suggested by

@@ -99,8 +99,6 @@ end
 
 local function SpawnPortalCreature(_, _, _, pUnit)
 	local c = pUnit:SpawnCreature(90090, pUnit:GetX(), pUnit:GetY(), pUnit:GetZ(), pUnit:GetO())
-	c:CastSpell(c, 706, true)
-	c:Mount(28605)
 	local b = GetCreature(50, 90085, pUnit)
 	if b then
 		if b:IsInCombat() then
@@ -382,12 +380,18 @@ end
 
 local function WarlockAI(event, pUnit)
 	if event == 1 then
+		if not pUnit:HasAura(90090) then
+			pUnit:CastSpell(pUnit, 90090, true)
+		end
 		pUnit:RegisterEvent(DeathCoil, 10000, 0)
 		pUnit:RegisterEvent(MortalStrike, 7000, 0)
 	else
 		pUnit:RemoveEvents()
 		if event == 4 then
 			pUnit:DespawnOrUnsummon(5000)
+		elseif event == 5 then
+			pUnit:CastSpell(pUnit, 706, true)
+			pUnit:Mount(28605)
 		end
 	end
 end
@@ -395,4 +399,5 @@ end
 RegisterCreatureEvent(90090, 1, WarlockAI)
 RegisterCreatureEvent(90090, 2, WarlockAI)
 RegisterCreatureEvent(90090, 4, WarlockAI)
+RegisterCreatureEvent(90090, 5, WarlockAI)
 

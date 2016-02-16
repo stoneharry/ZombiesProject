@@ -44,6 +44,7 @@ end
 
 local function QuestGossipCont(event, player, pUnit)
 	if player:HasQuest(90001) then
+		player:CastSpell(pUnit, 7162, true)
 		pUnit:SetNPCFlags(0)
 		pUnit:RemoveEvents()
 		pUnit:RemoveAura(39947)

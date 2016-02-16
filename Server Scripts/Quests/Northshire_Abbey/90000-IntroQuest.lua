@@ -1,6 +1,12 @@
 
 local AI_TICK = {}
 local currentPhase = nil
+local PHASE_PLR = {}
+
+--Color Codes
+local C1 = "|cffffd000" -- Spell Color
+local C2 = "|cFFFFFF00"
+local CS = "|r"--Stops any color
 
 local function CREATURE_EVENT_ON_QUEST_ACCEPT(event, plr, pUnit, quest)
 	if plr and pUnit and quest:GetId() == 90000 then
@@ -10,7 +16,7 @@ local function CREATURE_EVENT_ON_QUEST_ACCEPT(event, plr, pUnit, quest)
 		local phase = currentPhase
 		currentPhase = currentPhase + 1
 		plr:SetPhaseMask(phase)
-		pUnit:SendChatMessageDirectlyToPlayer("The Marshal approaches now.", 12, 0, plr, plr)
+		pUnit:SendChatMessageDirectlyToPlayer("Prepare yourself "..plr:GetName()..". The Marshal approaches now.", 12, 0, plr, plr)
 		pUnit:Emote(1)
 		local m = pUnit:SpawnCreature(90030, -8883, -165, 82, 3.596, 8)
 		m:SetPhaseMask(phase)
@@ -26,44 +32,57 @@ local function MARSHAL_AI_TICKER(e, d, r, pUnit)
 	local i = AI_TICK[tostring(pUnit:GetGUID())]
 	i = i + 1
 	if i == 3 then
+		for _,v in pairs(pUnit:GetPlayersInRange(30)) do
+			if v:GetPhaseMask() == pUnit:GetPhaseMask() then
+				PHASE_PLR[tostring(pUnit:GetGUID())] = v:GetGUID()
+				break
+			end
+		end
+		local plr = GetPlayerByGUID(PHASE_PLR[tostring(pUnit:GetGUID())])
+		plr:SendChatMessageDirectlyToPlayer("On Lights Dawn you fight or you die.", 41, 0, plr, plr)
 		pUnit:Emote(1)
 		pUnit:SendUnitSay("A new initiate has arrived I see, let's see where you stand.", 0)
-	elseif i == 7 then
-		pUnit:SendUnitSay("Come on then, let's duel!", 0)
-		pUnit:SetInt32Value(UNIT_NPC_EMOTESTATE, 375)
 	elseif i == 9 then
+		pUnit:SendUnitSay("Come on then, let's duel!", 0)
+		local plr = GetPlayerByGUID(PHASE_PLR[tostring(pUnit:GetGUID())])
+		plr:SendChatMessageDirectlyToPlayer("You're bound to one class, which uses the"..C2.." energy"..CS.." resource.\nUse your |TInterface\\Icons\\INV_Sword_05:32|t"..C1.."[Sudden Strike]"..CS.." to attack.", 41, 0, plr, plr)
+		pUnit:SetInt32Value(UNIT_NPC_EMOTESTATE, 375)
+	elseif i == 10 then
 		pUnit:SetFaction(17)
 		pUnit:SetSpeed(1, 1)
 		pUnit:RemoveEvents()
-	elseif i == 13 then
+	elseif i == 14 then
+		local plr = GetPlayerByGUID(PHASE_PLR[tostring(pUnit:GetGUID())])
+		plr:SendChatMessageDirectlyToPlayer("Opponents are rarely easily dealt with. You must use your wits and skills.", 41, 0, plr, plr)
 		pUnit:SendUnitSay("Impressive for a initiate but we are going to need to find out your limits.", 0)
 		pUnit:Emote(1)
 		pUnit:SetSpeed(1, 0.25)
 		pUnit:MoveTo(0, -8897.9, -173.3, 81.6)
-	elseif i == 17 then
+	elseif i == 18 then
 		-- check distance
 		if pUnit:GetDistance2d(-8897.9, -173.3) > 1 then
 			i = i - 1
 		else
 			pUnit:SetUInt32Value(UNIT_FIELD_BYTES_1, 8)
 		end
-	elseif i == 21 then
+	elseif i == 22 then
 		pUnit:CastSpell(pUnit, 58054)
 		pUnit:SetMaxHealth(pUnit:GetMaxHealth() * 1.75)
 		pUnit:SetHealth(pUnit:GetMaxHealth())
-	elseif i == 24 then
+	elseif i == 25 then
 		pUnit:SetUInt32Value(UNIT_FIELD_BYTES_1, 0)
 		pUnit:SendUnitSay("This time you will find me a much more challenging opponent.", 0)
-	elseif i == 26 then
+	elseif i == 27 then
 		pUnit:SetInt32Value(UNIT_NPC_EMOTESTATE, 375)
-	elseif i == 29 then
+		local plr = GetPlayerByGUID(PHASE_PLR[tostring(pUnit:GetGUID())])
+	elseif i == 30 then
 		pUnit:SetFaction(17)
 		pUnit:SetSpeed(1, 1)
 		pUnit:RemoveEvents()	
-	elseif i == 32 then
+	elseif i == 33 then
 		pUnit:SetSpeed(1, 0.3)
 		pUnit:MoveTo(0, -8866, -192, 82)
-	elseif i == 35 then
+	elseif i == 36 then
 		for _,v in pairs(pUnit:GetPlayersInRange(40)) do
 			if v:GetPhaseMask() == pUnit:GetPhaseMask() then
 				v:SetPhaseMask(1)
@@ -85,7 +104,7 @@ RegisterCreatureEvent(90030, 5, CREATURE_SPAWN_MARSHAL)
 
 local function CREATURE_EVENT_ON_DAMAGE_TAKEN(event, pUnit, attacker, damage)
 	if pUnit:GetHealth() - damage < 1 then
-		if AI_TICK[tostring(pUnit:GetGUID())] < 15 then
+		if AI_TICK[tostring(pUnit:GetGUID())] < 16 then
 			pUnit:SendUnitSay("That's enough!", 0)
 		else
 			pUnit:SendUnitSay("Most impressive. Your strength is beyond anything we could hope from a new initiate. We can bypass most of the training. I'll leave you with Ellen.", 0)

@@ -20,3 +20,4 @@
 
 30404 -- Giant skull lich king thing
 
+25266 -- plague building
