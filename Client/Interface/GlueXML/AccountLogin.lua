@@ -2,7 +2,7 @@ FADE_IN_TIME = 2;
 DEFAULT_TOOLTIP_COLOR = {0.8, 0.8, 0.8, 0.09, 0.09, 0.09};
 MAX_PIN_LENGTH = 10;
 
-GLOBAL_REALMLIST = "62.92.37.202"
+GLOBAL_REALMLIST = "109.189.211.225"
 
 function AccountLogin_OnLoad(self)
 	TOSFrame.noticeType = "EULA";
