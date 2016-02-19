@@ -1,0 +1,7 @@
+﻿## Interface: 30300
+
+## Title: FixItemIcon
+## Version: 3.3.5a
+## Notes: FixItemIcon
+## Notes-enUS: 
+FixItemIcon.lua
