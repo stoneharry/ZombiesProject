@@ -308,7 +308,7 @@ local function CheckForNearbyPlayers(_, _, _, pUnit)
 		end
 	else
 		pUnit:RemoveEvents()
-		pUnit:SendUnitSay("Hello brave heroes, welcome. You're visit is quite pleasantly timed.")
+		pUnit:SendUnitSay("Hello brave heroes, welcome. Your visit is quite pleasantly timed.")
 		pUnit:Emote(1)
 		AI_COUNTER = 0
 		pUnit:RegisterEvent(AIUpdater, 1000, 0)

@@ -4,7 +4,7 @@ local Roles = {}
 local BattlePriest = 90004
 local HighElf = 90021
 local Dwarf = 90020
-local Orc = 90022
+local Orc = 90117
 local GenericBunny = 90097
 
 --[[NORTHSHIRE ABBEY]]--
@@ -107,7 +107,7 @@ function Utility.MakeAWorld(eventId, delay, repeats, pUnit)
 				Roles[tostring(xUnit:GetGUID())] = 1
 			end
 		end
-		local Bunny = pUnit:SpawnCreature(GenericBunny, -8916.900391, -166.688660, 81.939790, 5.932497)
+		local Bunny = pUnit:SpawnCreature(GenericBunny, -8917.900391, -166.688660, 81.939790, 5.932497)
 		if (Bunny:GetNearObject(1,0,Orc) == nil) then
 			xUnit = pUnit:SpawnCreature(Orc, -8916.900391, -166.688660, 81.939790, 5.932497) -- Orc kneeling in infirmary
 			if (xUnit ~= nil) then

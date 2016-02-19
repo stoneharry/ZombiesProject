@@ -79,6 +79,10 @@ local function KeepSpawningAD(_, _, _, pUnit)
 		return
 	end
 	if pUnit:GetNearestPlayer(50) then
+		local t = pUnit:GetCreaturesInRange(100, 90105)
+		if t and #t > 23 then
+			return
+		end
 		local c = pUnit:SpawnCreature(90105, -8735.8, 968, 99.4, 1.5, 1, 180000)
 		local x = -8732
 		local y = 1014

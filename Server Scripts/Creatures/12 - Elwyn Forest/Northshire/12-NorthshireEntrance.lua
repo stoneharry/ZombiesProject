@@ -8,6 +8,12 @@ local y2 = 32
 local button = false
 local xi = 0
 
+--Color Codes
+local C1 = "|cffffd000" -- Spell Color
+local C2 = "|cFFFFFF00"
+local CS = "|r"--Stops any color
+local plrTxt
+
 local function RenewVisual(eventId, delay, repeats, pUnit)
 	pUnit:CastSpell(pUnit, 55926, true)
 end
@@ -114,6 +120,7 @@ local function SpiritwindOnSelect(event, player, pUnit, sender, initid, code)
 	if (initid == 1) then
 		if player:HasQuest(90004) then
 			player:QuestKillCredit(90006)
+			player:SendChatMessageDirectlyToPlayer("You're about to leave sanctuary! Players will be able to attack you and kill you!\n Look for the |TInterface\\Icons\\Spell_shadow_abominationexplosion:32|t"..C1.."[Scourge Controlled Zone]"..CS.." buff", 41, 0, player, player)
 		end
 		pUnit:SendUnitSay("By Elune, begone!",0)
 		pUnit:CastSpell(pUnit, 53199)
