@@ -1,5 +1,5 @@
 
-local spawnPlaces = {}
+--local spawnPlaces = {}
 
 local function KeepVisualUp(event, delay, repeats, pUnit)
 	pUnit:CastSpell(pUnit, 39947, true)
@@ -10,7 +10,7 @@ local function TrappedUnit(event, pUnit, extra)
 	pUnit:RegisterEvent(KeepVisualUp, 2000, 0)
 	pUnit:SetHealth(pUnit:GetMaxHealth() - math.random(30, 50))
 	pUnit:SetNPCFlags(1)
-	spawnPlaces[tostring(pUnit:GetGUID())] = {pUnit:GetX(), pUnit:GetY(), pUnit:GetZ(), pUnit:GetO()}
+	--spawnPlaces[tostring(pUnit:GetGUID())] = {pUnit:GetX(), pUnit:GetY(), pUnit:GetZ(), pUnit:GetO()}
 end
 
 RegisterCreatureEvent(90016, 5, TrappedUnit)
@@ -18,15 +18,16 @@ RegisterCreatureEvent(90016, 5, TrappedUnit)
 local function SetVisibleNormalPhase(e, d, r, pUnit)
 	pUnit:SetPhaseMask(1)
 	pUnit:RegisterEvent(KeepVisualUp, 2000, 0)
-	local t = spawnPlaces[tostring(pUnit:GetGUID())]
+	--local t = spawnPlaces[tostring(pUnit:GetGUID())]
 	pUnit:SetFacing(t[4])
 	pUnit:SetNPCFlags(1)
 end
 
 local function RespawnSoon(e, d, r, pUnit)
 	pUnit:SetPhaseMask(CREATURE_ONLY_PHASE)
-	local t = spawnPlaces[tostring(pUnit:GetGUID())]
-	pUnit:MoveTo(0, t[1], t[2], t[3])
+	--local t = spawnPlaces[tostring(pUnit:GetGUID())]
+	--pUnit:MoveTo(0, t[1], t[2], t[3])
+	pUnit:MoveHome()
 	pUnit:RegisterEvent(SetVisibleNormalPhase, 20000, 1)
 end
 

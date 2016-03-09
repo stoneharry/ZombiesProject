@@ -21,3 +21,9 @@
 30404 -- Giant skull lich king thing
 
 25266 -- plague building
+
+SOUNDS:
+
+9008 = sick music track
+9006 = sick crowd cheering noise
+9009 = less sick more gentle music, fits with 8

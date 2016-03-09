@@ -120,7 +120,7 @@ local function SpiritwindOnSelect(event, player, pUnit, sender, initid, code)
 	if (initid == 1) then
 		if player:HasQuest(90004) then
 			player:QuestKillCredit(90006)
-			player:SendChatMessageDirectlyToPlayer("You're about to leave sanctuary! Players will be able to attack you and kill you!\n Look for the |TInterface\\Icons\\Spell_shadow_abominationexplosion:32|t"..C1.."[Scourge Controlled Zone]"..CS.." buff", 41, 0, player, player)
+			player:SendChatMessageDirectlyToPlayer("You're about to leave sanctuary! Players will be able to attack you and kill you!\n Look for the |TInterface\\Icons\\Spell_shadow_abominationexplosion:32|t"..C1.."[Scourge Controlled Zone]"..CS.." buff.", 41, 0, player, player)
 		end
 		pUnit:SendUnitSay("By Elune, begone!",0)
 		pUnit:CastSpell(pUnit, 53199)

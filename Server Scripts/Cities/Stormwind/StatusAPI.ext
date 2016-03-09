@@ -1,7 +1,7 @@
 
 -- TODO: Convert this to MySQL
 
-local SIEGE_STAGE = 2
+local SIEGE_STAGE = 1
 --					Mage,  Park,  Cath,  Old_Town
 local BOSS_SLAIN = {false, false, false, false}
 
@@ -36,6 +36,15 @@ function TempOnChat(event, player, msg, Type, lang)
 		return false
 	elseif (msg == "#getStage") then
 		player:SendBroadcastMessage("Current stage: " .. tostring(SIEGE_STAGE) .. ".")
+		return false
+	elseif (msg == "#tikki") then
+		if(player:HasAura(75333)) then
+			player:RemoveAura(75333)
+			player:SetFloatValue(146,1)
+		else
+			player:SetFloatValue(146,1000)
+			player:AddAura(75333,player)
+		end
 		return false
 	end
 end

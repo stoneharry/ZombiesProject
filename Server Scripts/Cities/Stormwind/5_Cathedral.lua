@@ -110,7 +110,7 @@ local function AIUpdater(_, _, _, pUnit)
 		if count < PlayersRequired then -- debug
 			chatCounter = chatCounter + 2
 			if chatCounter > 60 then
-				pUnit:SendUnitSay("Bring more heroes, maybe then you will pose a threat to me.")
+				pUnit:SendUnitSay("We will need more heroes, if we are to succed. Gather your allies!")
 				chatCounter = 0
 			end
 			AI_COUNTER = AI_COUNTER - 1
@@ -154,7 +154,7 @@ local function AIUpdater(_, _, _, pUnit)
 			end
 		end
 		pUnit:StopChannel()
-		pUnit:SetDisplayId(18919)
+		pUnit:SetDisplayId(8783)
 		pUnit:CastSpell(pUnit, 62003)
 		SPECIAL_EVENT_AI = 0
 		pUnit:RegisterEvent(checkBeamCrossovers, CheckBeamCollisionTime, 0)
@@ -303,12 +303,12 @@ local function CheckForNearbyPlayers(_, _, _, pUnit)
 	if count < PlayersRequired then
 		chatCounter = chatCounter + 2
 		if chatCounter > 30 then
-			pUnit:SendUnitSay("Bring more heroes, maybe then you will pose a threat to me.")
+			pUnit:SendUnitSay("You will need more heroes than that to defeat me. Pitifull.")
 			chatCounter = 0
 		end
 	else
 		pUnit:RemoveEvents()
-		pUnit:SendUnitSay("Hello brave heroes, welcome. Your visit is quite pleasantly timed.")
+		pUnit:SendUnitSay("Heroes! Over here! Quickly! Your visit is quite pleasantly timed.")
 		pUnit:Emote(1)
 		AI_COUNTER = 0
 		pUnit:RegisterEvent(AIUpdater, 1000, 0)

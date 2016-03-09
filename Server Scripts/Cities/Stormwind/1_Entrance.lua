@@ -173,7 +173,7 @@ local function BeginAIMarch(_, _, _, pUnit)
 		c:CastSpell(c, 26638)
 	elseif AI_COUNT == 54 then
 		local c = GetCreature(55, 90074, pUnit)
-		c:SendUnitYell("You have foolishly waltzed straight into my lair. Now watch as your bravery leads to your demise!", 0)
+		c:SendUnitYell("You have foolishly waltzed straight into my sanctuary. Now watch as your bravery leads to your demise!", 0)
 		c:Emote(5)
 	elseif AI_COUNT == 60 then
 		pUnit:SendUnitSay("Quick! Defend me and I'll hold them off. The light shall prevail!")
