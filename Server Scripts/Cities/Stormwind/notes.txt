@@ -24,6 +24,4 @@
 
 SOUNDS:
 
-9008 = sick music track
 9006 = sick crowd cheering noise
-9009 = less sick more gentle music, fits with 8

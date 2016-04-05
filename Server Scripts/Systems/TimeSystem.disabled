@@ -1,0 +1,66 @@
+
+local currentTime = os.clock()
+local lastTime = nil
+-- (60 minutes * 4 hours) * 0.1 = 24
+local newHoursPerMinute = 0.1 * 10 * 5
+local normalHoursPerMinute = 0.01666667
+
+function Player:UpdateTimeSpeed()
+	local p = CreatePacket(66, 12) -- SMSG_LOGIN_SETTIMESPEED
+	p:WriteULong(currentTime / 1000) -- time
+	p:WriteFloat(newHoursPerMinute) -- speed
+	p:WriteULong(0)
+	self:SendPacket(p)
+end
+
+local function timeIncrementer(_, _, _)
+	--print("----------------")
+	--print("-- Updating Time")
+	
+	local functionTime = os.clock()
+	local diffInMs = functionTime - (lastTime or 0)
+	local update = (normalHoursPerMinute / newHoursPerMinute) * diffInMs
+	
+	--print("diffInMs: " .. tostring(diffInMs))
+	--print("update: " .. tostring(update))
+	--print("newTime: " .. tostring(currentTime + update))
+	
+	currentTime = currentTime + update
+	lastTime = os.clock()
+	
+	-- hack debug
+	--[[local plrs = GetPlayersInWorld(2)
+	if plrs then
+		for _,v in pairs(plrs) do
+			if v then
+				v:UpdateTimeSpeed()
+			end
+		end
+	end]]
+end
+
+CreateLuaEvent(timeIncrementer, 10000, 0)
+
+-- On every zone change (i.e: login, etc) resend time
+
+local function PLAYER_EVENT_ON_UPDATE_ZONE(event, player, newZone, newArea)
+	if player then
+		player:UpdateTimeSpeed()
+	end
+end
+
+RegisterPlayerEvent(27, PLAYER_EVENT_ON_UPDATE_ZONE) 
+
+-- Debugging
+
+local function PLAYER_EVENT_ON_CHAT_TIKKI(event, plr, msg, _type, lang)
+	if not plr:IsGM() then
+		return
+	end
+	if (msg == "#time") then
+		plr:UpdateTimeSpeed()
+		return false
+	end
+end
+
+RegisterPlayerEvent(18, PLAYER_EVENT_ON_CHAT_TIKKI)

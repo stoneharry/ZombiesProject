@@ -23,7 +23,6 @@ local function ElenorOnGossip(event, player, pUnit)
 		player:GossipMenuAddItem(1,"Event 1", 0, 11)
 		player:GossipMenuAddItem(1,"Event 2", 0, 12)
 		player:GossipMenuAddItem(1,"Event 3", 0, 13)
-		player:GossipMenuAddItem(1,"Event 4", 0, 14)
 	end
 	player:GossipMenuAddItem(0,"How can I help you?", 0, 2)
 	player:GossipAddQuests(pUnit)
@@ -77,13 +76,13 @@ local function ElenorOnSelect(event, player, pUnit, sender, initid, code)
 	elseif (initid == 5) then --Water quest
 		--player:SendQuestTemplate(BREAD)
 	elseif (initid == 11) then
-		pUnit:PlayDistanceSound(90006)
+		pUnit:PlayDistanceSound(90010)
 	elseif (initid == 12) then
-		pUnit:PlayDistanceSound(90007)
+		pUnit:PlayDistanceSound(90011)
 	elseif (initid == 13) then
-		pUnit:PlayDistanceSound(90008)
-	elseif (initid == 14) then
-		pUnit:PlayDistanceSound(90009)
+		pUnit:PlayDistanceSound(90012)
+		local xyz = pUnit:GetRelativePoint(4, math.random(1,360) )
+		print("X: "..tostring(xyz[1]).." y: "..tostring(xyz[2]).. " z: "..tostring(xyz[3]))
 	elseif (initid == 9) then
 		player:GossipComplete()
 	end

@@ -1,8 +1,64 @@
 
+local playersRequired = 1
 
----------------------------
--- BOULDER TRAPS ----------
----------------------------
+local DEBUG = false
+
+local function BugPrint(msg)
+	if (DEBUG  == true) then
+		if (msg ~= nil) then
+			print(msg)
+		else
+			print("Msg was nil, unable to print")
+		end
+	end
+end
+
+-----------------------------
+-----	TRAPS BELOW		-----
+-----------------------------
+
+--Geist Trap--
+
+local Geist = 90238
+local GeistTrigger01 = 90239
+local Geist01Cooldown = 45000
+
+--Looking for players--
+
+local function GeistTrap_01_LFPlayers(event, delay, repeats, pUnit)
+	local plrs = pUnit:GetPlayersInRange(5)
+	BugPrint("Getting Plrs")
+	if plrs and #plrs > 0 then
+		BugPrint("Players nearby. Activating cooldown.")
+		pUnit:RemoveEvents()
+		pUnit:RegisterEvent(GeistTrapReload, Geist01Cooldown, 1)
+		--SpawnShit
+	end
+end
+
+function GeistTrapReload(event,delay,repeats,pUnit)
+	local entry = pUnit:GetEntry()
+		BugPrint("Cooldown triggered by entry: "..tostring(entry))
+	if entry == GeistTrigger01 then
+		BugPrint("Reloading Geist trap 01")
+		pUnit:RegisterEvent(GeistTrap_01_LFPlayers, 3000, 0)
+	end
+end
+
+local function GeistTrap_OnSpawn(event, pUnit, extra)
+	local entry = pUnit:GetEntry()
+	if entry == GeistTrigger01 then
+		BugPrint("Loading Geist trap 01")
+		pUnit:RegisterEvent(GeistTrap_01_LFPlayers, 3000, 0)
+	end
+end
+
+RegisterCreatureEvent(90239, 5, GeistTrap_OnSpawn)
+
+
+------------------------------
+--------------BOULDER TRAP
+---------
 
 local function BuilderCollisionOne(_, _, _, pUnit)
 	pUnit:RemoveEvents()
@@ -85,3 +141,225 @@ end
 RegisterCreatureEvent(90120, 5, BoulderSpawn)
 
 ---------------------------
+-- MINIBOSS ---------------
+------ The Undying --------
+---------------------------
+
+-- 16734 "Death is all you will find here!"
+-- 16736 "Choke on your suffering!"
+
+local SoulFrenzyTimer = 13000
+
+local function SoulFrenzySpawn(_, _, _, pUnit)
+	local power = pUnit:GetPower(6)
+	if power >= 100 then
+		pUnit:SetPower(6, power - 100)
+	else
+		return
+	end
+	local x1 = 8791
+	local y1 = 338
+	local x2 = 8786
+	local y2 = 371
+	local x = -math.random(x2, x1)
+	local y = math.random(y1, y2)
+	pUnit:SpawnCreature(90241, x, y, 102, 0, 2, SoulFrenzyTimer)
+end
+
+local function RemoveFlags(_, _, _, pUnit)
+	pUnit:SetUInt32Value(UNIT_FIELD_FLAGS, 0)
+end
+
+local function CheckForStart(_, _, _, pUnit)
+	local plrs = pUnit:GetPlayersInRange(20)
+	if plrs and #plrs >= playersRequired then
+		pUnit:PlayMusic(9008)
+		pUnit:RemoveEvents()
+		pUnit:Emote(1)
+		pUnit:SendUnitSay("The Master surveyed his kingdom and found it lacking. His judgement was swift and without mercy. Death to all!")
+		pUnit:PlayDistanceSound(16738)
+		pUnit:RegisterEvent(RemoveFlags, 7000, 1)
+	end
+end
+
+local function UndyingStrike(_, _, _, pUnit)
+	local power = pUnit:GetPower(6)
+	if power >= 50 then
+		pUnit:SetPower(6, power - 50)
+	else
+		return
+	end
+	local plr = pUnit:GetAITarget(1)
+	if plr then
+		pUnit:CastSpell(plr, 70437)
+	end
+end
+
+local function RegeneratePowerUndying(_, _, _, pUnit)
+	pUnit:SetPower(6, pUnit:GetPower(6) + 18)
+end
+
+local function SilencePlayer(_, _, _, pUnit)
+	local power = pUnit:GetPower(6)
+	if power >= 100 then
+		for _,v in pairs(pUnit:GetPlayersInRange(30)) do
+			if v:IsCasting() then
+				pUnit:CastSpell(v, 47476)
+				pUnit:SetPower(6, power - 100)
+				return
+			end
+		end
+	end
+end
+
+local function HungeringCold(_, _, _, pUnit)
+	local power = pUnit:GetPower(6)
+	if power >= 400 then
+		pUnit:CastSpell(pUnit, 49203)
+	end
+end
+
+local function UndyingEvents(event, pUnit)
+	if event == 1 then
+		pUnit:RegisterEvent(SoulFrenzySpawn, 5000, 0)
+		pUnit:RegisterEvent(UndyingStrike, 6000, 0)
+		pUnit:RegisterEvent(RegeneratePowerUndying, 500, 0)
+		pUnit:RegisterEvent(SilencePlayer, 12000, 0)
+		pUnit:RegisterEvent(HungeringCold, 18000, 0)
+		for _,v in pairs(pUnit:GetGameObjectsInRange(50, 164726)) do
+			v:SetByteValue(GAMEOBJECT_BYTES_1, 0, 1)
+		end
+	elseif event == 2 or event == 4 then
+		pUnit:RemoveEvents()
+		pUnit:SetMaxPower(6, 1000)
+		pUnit:SetPower(6, 1000)
+		for _,v in pairs(pUnit:GetCreaturesInRange(60, 90241)) do
+			v:RemoveEvents()
+			v:DespawnOrUnsummon(0)
+		end
+		for _,v in pairs(pUnit:GetGameObjectsInRange(50, 164726)) do
+			v:SetByteValue(GAMEOBJECT_BYTES_1, 0, 0)
+		end
+		if event == 2 then
+			pUnit:SetUInt32Value(UNIT_FIELD_FLAGS, 772)
+			pUnit:RegisterEvent(CheckForStart, 5000, 0)
+		else
+			pUnit:SendUnitSay("Yes... run... run to meet your destiny... its bitter cold embrace awaits you.")
+			pUnit:PlayDistanceSound(16737)
+		end
+	elseif event == 5 then
+		pUnit:SetPowerType(6)
+		pUnit:SetMaxPower(6, 1000)
+		pUnit:SetPower(6, 1000)
+		pUnit:RegisterEvent(CheckForStart, 1000, 0)
+	end
+end
+
+RegisterCreatureEvent(90240, 5, UndyingEvents)
+RegisterCreatureEvent(90240, 1, UndyingEvents)
+RegisterCreatureEvent(90240, 2, UndyingEvents)
+RegisterCreatureEvent(90240, 4, UndyingEvents)
+
+---------------------------
+-- SOUL FRENZY ------------
+---------------------------
+---------------------------
+-- 68855 well of souls ground visual
+-- 72630 small AoE souls ground, needs repeating
+-- 69859 cruciple of souls
+
+local function SpinShoot(_, _, _, pUnit)
+	pUnit:CastSpell(pUnit, 75956, true) -- visual
+	local o = pUnit:GetO()
+	o = (o * 180) / math.pi
+	o = o + 10
+	if (o >= 360) then
+		o = 0
+	end
+	pUnit:SetFacing((o * math.pi) / 180)
+	local plrs = pUnit:GetPlayersInRange(8)
+	if plrs then
+		for _,v in pairs(plrs) do
+			if pUnit:IsWithinLoS(v) and pUnit:IsFacing(v, (60 * math.pi) / 180) then
+				local distance = v:GetDistance2d(pUnit)
+				pUnit:DealDamage(v, 22 - distance, false)
+			end
+		end
+	end
+end
+
+local function SoulFrenzyTicker(_, _, _, pUnit)
+	pUnit:CastSpell(pUnit, 68855)
+end
+
+local function ShutdownSoulFrenzy(_, _, _, pUnit)
+	pUnit:RemoveEvents()
+	--pUnit:RemoveAura(72630)
+	pUnit:RemoveAura(68855)
+	pUnit:RemoveAura(69859)
+	pUnit:CastSpell(pUnit, 72130, true)
+end
+
+local function SoulFrenzySpawn(event, pUnit)
+	pUnit:CastSpell(pUnit, 72630)
+	pUnit:CastSpell(pUnit, 69859)
+	pUnit:RegisterEvent(SoulFrenzyTicker, 1000, 0)
+	pUnit:RegisterEvent(SpinShoot, 500, 0)
+	pUnit:RegisterEvent(ShutdownSoulFrenzy, SoulFrenzyTimer - 1000, 1)
+end
+
+RegisterCreatureEvent(90241, 5, SoulFrenzySpawn)
+
+---------------------------
+-- Troth The Ambitious ----
+---------------------------
+
+local function TrothExplodeCast(_, _, _, pUnit)
+	pUnit:SetUInt32Value(UNIT_FIELD_FLAGS, 0)
+	pUnit:SetRooted(true)
+	pUnit:CastSpell(pUnit, 69586)
+end
+
+local function DoSomeCrazyStuff(_, _, _, pUnit)
+	pUnit:RemoveAura(50650)
+	pUnit:SendUnitSay("Who disturbs Troth!?")
+	pUnit:Emote(5)
+	pUnit:RegisterEvent(TrothExplodeCast, 4000, 1) 
+end
+
+local function WaitForPlayersTroth(_, _,_ ,pUnit)
+	local plrs = pUnit:GetPlayersInRange(4)
+	if plrs and #plrs > 0 then
+		pUnit:RemoveEvents()
+		pUnit:RegisterEvent(DoSomeCrazyStuff, 5000, 1)
+	else
+		pUnit:CastSpell(pUnit, 50650)
+	end
+end
+
+local function TrothEvents(event, pUnit)
+	pUnit:RegisterEvent(WaitForPlayersTroth, 1000, 0)
+end
+
+RegisterCreatureEvent(90242, 5, TrothEvents)
+
+---------------------------
+-- Baron Rivermead --------
+---------------------------
+
+-- free precast visual 67040
+
+local function KneelVisual(_, _, _, pUnit)
+	pUnit:CastSpell(pUnit, 68442)
+end
+
+local function BaronSpawn(event, pUnit)
+	pUnit:SetHealth(pUnit:GetMaxHealth() / 2.5)
+	pUnit:SetPower(0, pUnit:GetMaxPower(0) / 1.5)
+	pUnit:RegisterEvent(KneelVisual, 5000, 0)
+end
+
+RegisterCreatureEvent(90243, 5, BaronSpawn)
+
+---------------------------
+

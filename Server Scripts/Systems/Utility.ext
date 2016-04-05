@@ -3,6 +3,10 @@ function Creature:IsCasting()
 	return self:HasUnitState(0x00008000)
 end
 
+function Player:IsCasting()
+	return self:HasUnitState(0x00008000)
+end
+
 function Creature:ChannelSpell(target, id)
 	self:SetUInt64Value(UNIT_FIELD_CHANNEL_OBJECT, target:GetGUID());
 	self:SetUInt32Value(UNIT_CHANNEL_SPELL, id);
@@ -30,6 +34,32 @@ function GetCreature(range, id, pUnit)
 		end
 	end
 	return t[1]
+end
+
+function Creature:IsFacing(target, compareAngle)
+	local x = target:GetX() - self:GetX()
+	local y = target:GetY() - self:GetY()
+	
+	local angle = math.atan2(y, x)
+	if (angle < 0.0) then
+		angle = 2.0 * math.pi + angle
+	end
+	angle = angle - self:GetO()
+	
+	while (angle > math.pi) do
+		angle = angle - 2.0 * math.pi
+	end
+	while (angle < -math.pi) do
+		angle = angle + 2.0 * math.pi
+	end
+	
+	-- reduce or increase angle
+	--local compareAngle = (60 * math.pi) / 180 --math.pi
+	
+	local left = -1.0 * (compareAngle / 2.0)
+	local right = (compareAngle / 2.0)
+	
+	return (angle >= left) and (angle <= right)
 end
 
 function sendAddonMessage(plr, msg, packet)
