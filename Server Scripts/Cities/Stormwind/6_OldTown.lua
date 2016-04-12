@@ -173,12 +173,21 @@ end
 local function CheckForStart(_, _, _, pUnit)
 	local plrs = pUnit:GetPlayersInRange(20)
 	if plrs and #plrs >= playersRequired then
-		pUnit:PlayMusic(9008)
-		pUnit:RemoveEvents()
-		pUnit:Emote(1)
-		pUnit:SendUnitSay("The Master surveyed his kingdom and found it lacking. His judgement was swift and without mercy. Death to all!")
-		pUnit:PlayDistanceSound(16738)
-		pUnit:RegisterEvent(RemoveFlags, 7000, 1)
+		local count = 0
+		-- could be optimised
+		for _,v in pairs(plrs) do
+			if v:IsWithinLoS(pUnit) then
+				count = count + 1
+			end
+		end
+		if count >= playersRequired then
+			pUnit:PlayMusic(9008)
+			pUnit:RemoveEvents()
+			pUnit:Emote(1)
+			pUnit:SendUnitSay("The Master surveyed his kingdom and found it lacking. His judgement was swift and without mercy. Death to all!")
+			pUnit:PlayDistanceSound(16738)
+			pUnit:RegisterEvent(RemoveFlags, 7000, 1)
+		end
 	end
 end
 
@@ -224,7 +233,7 @@ local function UndyingEvents(event, pUnit)
 		pUnit:RegisterEvent(SoulFrenzySpawn, 5000, 0)
 		pUnit:RegisterEvent(UndyingStrike, 6000, 0)
 		pUnit:RegisterEvent(RegeneratePowerUndying, 500, 0)
-		pUnit:RegisterEvent(SilencePlayer, 12000, 0)
+		pUnit:RegisterEvent(SilencePlayer, 8000, 0)
 		pUnit:RegisterEvent(HungeringCold, 18000, 0)
 		for _,v in pairs(pUnit:GetGameObjectsInRange(50, 164726)) do
 			v:SetByteValue(GAMEOBJECT_BYTES_1, 0, 1)
@@ -241,7 +250,7 @@ local function UndyingEvents(event, pUnit)
 			v:SetByteValue(GAMEOBJECT_BYTES_1, 0, 0)
 		end
 		if event == 2 then
-			pUnit:SetUInt32Value(UNIT_FIELD_FLAGS, 772)
+			pUnit:SetUInt32Value(UNIT_FIELD_FLAGS, UNIT_FIELD_FLAG_UNATTACKABLE + UNIT_FIELD_FLAG_C_UNATTACKABLE)
 			pUnit:RegisterEvent(CheckForStart, 5000, 0)
 		else
 			pUnit:SendUnitSay("Yes... run... run to meet your destiny... its bitter cold embrace awaits you.")
@@ -344,10 +353,148 @@ end
 RegisterCreatureEvent(90242, 5, TrothEvents)
 
 ---------------------------
+-- Lothros (Dreadlord) ----
+---------------------------
+
+local function LothrosCarrionSwarm(_, _, _, pUnit)
+	if pUnit:IsCasting() then
+		return
+	end
+	local power = pUnit:GetPower(2)
+	if power >= 20 then
+		pUnit:SetPower(2, power - 20)
+	else
+		return
+	end
+	pUnit:CastSpell(pUnit, 90045)
+end
+
+local function LothrosSleep(_, _, _, pUnit)
+	if pUnit:IsCasting() then
+		return
+	end
+	local plr = pUnit:GetAITarget(0)
+	local plrB = pUnit:GetAITarget(1)
+	if plr == plrB then
+		-- have another go
+		plr = pUnit:GetAITarget(0)
+	end
+	if plr then
+		local power = pUnit:GetPower(2)
+		if power >= 3 then
+			pUnit:SetPower(2, power - 3)
+		else
+			return
+		end
+		pUnit:CastSpell(plr, 53045)
+	end
+end
+
+local function LothrosCorruptionSpawn(_, _, _, pUnit)
+	local power = pUnit:GetPower(2)
+	if power >= 3 then
+		pUnit:SetPower(2, power - 3)
+	else
+		return
+	end
+	local x = 0
+	local y = 0
+	local z = pUnit:GetZ()
+	local done = false
+	local maxTries = 10
+	local count = 0
+	while not done do
+		x = -math.random(math.abs(pUnit:GetX()) - 10, math.abs(pUnit:GetX()) + 10)
+		y = math.random(pUnit:GetY() - 10, pUnit:GetY() + 10)
+		done = pUnit:IsWithinLoS(x, y, z)
+		count = count + 1
+		if (count >= maxTries) then
+			break
+		end
+	end
+	pUnit:SpawnCreature(90245, x, y, z, 0, 3, 20000)
+end
+
+local function LothrosRegeneratePower(_, _, _, pUnit)
+	pUnit:SetPower(2, pUnit:GetPower(2) + 2)
+end
+
+local function LothrosBecomeHostile(_, _, _, pUnit)
+	pUnit:SetUInt32Value(UNIT_FIELD_FLAGS, 0)
+end
+
+local function LothrosStartCheck(_, _, _, pUnit)
+	local plrs = pUnit:GetPlayersInRange(7)
+	if plrs and #plrs >= playersRequired then
+		local count = 0
+		-- could be optimised
+		for _,v in pairs(plrs) do
+			if v:IsWithinLoS(pUnit) then
+				count = count + 1
+			end
+		end
+		if count >= playersRequired then
+			pUnit:RemoveEvents()
+			-- start boss event
+			pUnit:SendUnitSay("[PLACEHOLDER]")
+			pUnit:Emote(1)
+			pUnit:StopChannel()
+			pUnit:RegisterEvent(LothrosBecomeHostile, 4000, 1)
+		end
+	end
+end
+
+local function LothrosEvents(event, pUnit)
+	if event == 5 then
+		pUnit:ChannelSpell(pUnit, 51795)
+		pUnit:RegisterEvent(LothrosStartCheck, 5000, 0)
+		pUnit:SetPowerType(2)
+		pUnit:SetMaxPower(2, 100)
+		pUnit:SetPower(2, 100)
+	elseif event == 4 or event == 2 then
+		pUnit:RemoveEvents()
+		pUnit:SetUInt32Value(UNIT_FIELD_FLAGS, UNIT_FIELD_FLAG_UNATTACKABLE + UNIT_FIELD_FLAG_C_UNATTACKABLE)
+		pUnit:RegisterEvent(ResetLothros, 10000, 1)
+	elseif event == 1 then
+		pUnit:RegisterEvent(LothrosRegeneratePower, 1500, 0)
+		pUnit:RegisterEvent(LothrosCarrionSwarm, 9000, 0)
+		pUnit:RegisterEvent(LothrosSleep, 6000, 0)
+		pUnit:RegisterEvent(LothrosCorruptionSpawn, 5000, 0)
+	end
+end
+
+function ResetLothros(_, _, _, pUnit)
+	LothrosEvents(5, pUnit)
+end
+
+RegisterCreatureEvent(90244, 5, LothrosEvents)
+RegisterCreatureEvent(90244, 4, LothrosEvents)
+RegisterCreatureEvent(90244, 2, LothrosEvents)
+RegisterCreatureEvent(90244, 1, LothrosEvents)
+
+local function LothrosCorruptionVisual(_, _, _, pUnit)
+	pUnit:CastSpell(pUnit, 56571)
+end
+
+local function DespawnSelfCorruption(_ ,_, _, pUnit)
+	pUnit:RemoveEvents()
+	pUnit:RemoveAura(56571)
+end
+
+local function LothrosCorruption(event, pUnit)
+	pUnit:CastSpell(pUnit, 56571)
+	pUnit:RegisterEvent(LothrosCorruptionVisual, 3000, 0)
+	pUnit:RegisterEvent(DespawnSelfCorruption, 18000, 1)
+end
+
+RegisterCreatureEvent(90245, 5, LothrosCorruption)
+
+---------------------------
 -- Baron Rivermead --------
 ---------------------------
 
 -- free precast visual 67040
+-- 59463 break bonds
 
 local function KneelVisual(_, _, _, pUnit)
 	pUnit:CastSpell(pUnit, 68442)
