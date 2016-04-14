@@ -257,6 +257,7 @@ local function UndyingEvents(event, pUnit)
 			pUnit:PlayDistanceSound(16737)
 		end
 	elseif event == 5 then
+		pUnit:RegisterScalingHealth()
 		pUnit:SetPowerType(6)
 		pUnit:SetMaxPower(6, 1000)
 		pUnit:SetPower(6, 1000)
@@ -412,11 +413,11 @@ local function LothrosCorruptionSpawn(_, _, _, pUnit)
 			break
 		end
 	end
-	pUnit:SpawnCreature(90245, x, y, z, 0, 3, 20000)
+	pUnit:SpawnCreature(90245, x, y, z, 0, 3, 40000)
 end
 
 local function LothrosRegeneratePower(_, _, _, pUnit)
-	pUnit:SetPower(2, pUnit:GetPower(2) + 2)
+	pUnit:SetPower(2, pUnit:GetPower(2) + 4)
 end
 
 local function LothrosBecomeHostile(_, _, _, pUnit)
@@ -446,6 +447,7 @@ end
 
 local function LothrosEvents(event, pUnit)
 	if event == 5 then
+		pUnit:RegisterScalingHealth()
 		pUnit:ChannelSpell(pUnit, 51795)
 		pUnit:RegisterEvent(LothrosStartCheck, 5000, 0)
 		pUnit:SetPowerType(2)
@@ -455,11 +457,18 @@ local function LothrosEvents(event, pUnit)
 		pUnit:RemoveEvents()
 		pUnit:SetUInt32Value(UNIT_FIELD_FLAGS, UNIT_FIELD_FLAG_UNATTACKABLE + UNIT_FIELD_FLAG_C_UNATTACKABLE)
 		pUnit:RegisterEvent(ResetLothros, 10000, 1)
+		for _,v in pairs(pUnit:GetCreaturesInRange(40, 90246)) do
+			v:RemoveEvents()
+			v:DespawnOrUnsummon(0)
+		end
+		for _,v in pairs(pUnit:GetCreaturesInRange(40, 90245)) do
+			v:RemoveEvents()
+		end
 	elseif event == 1 then
-		pUnit:RegisterEvent(LothrosRegeneratePower, 1500, 0)
-		pUnit:RegisterEvent(LothrosCarrionSwarm, 9000, 0)
+		pUnit:RegisterEvent(LothrosRegeneratePower, 2000, 0)
+		pUnit:RegisterEvent(LothrosCarrionSwarm, 15000, 0)
 		pUnit:RegisterEvent(LothrosSleep, 6000, 0)
-		pUnit:RegisterEvent(LothrosCorruptionSpawn, 5000, 0)
+		pUnit:RegisterEvent(LothrosCorruptionSpawn, 2000, 0)
 	end
 end
 
@@ -472,6 +481,23 @@ RegisterCreatureEvent(90244, 4, LothrosEvents)
 RegisterCreatureEvent(90244, 2, LothrosEvents)
 RegisterCreatureEvent(90244, 1, LothrosEvents)
 
+local function CorruptionTicker(_, _, _, pUnit)
+	local plr = pUnit:GetNearestPlayer(1)
+	if plr then
+		plr:CastSpell(plr, 90046)
+		pUnit:RemoveEvents()
+		pUnit:RemoveAura(56571)
+		pUnit:DespawnOrUnsummon(2000)
+		local c = pUnit:SpawnCreature(90246, pUnit:GetX(), pUnit:GetY(), pUnit:GetZ(), plr:GetO(), 3, 120000)
+		if c then
+			c:SetWanderRadius(3)
+			c:SetDefaultMovementType(1)
+			c:SetDeathState(1)
+			c:Respawn()
+		end
+	end
+end
+
 local function LothrosCorruptionVisual(_, _, _, pUnit)
 	pUnit:CastSpell(pUnit, 56571)
 end
@@ -482,12 +508,42 @@ local function DespawnSelfCorruption(_ ,_, _, pUnit)
 end
 
 local function LothrosCorruption(event, pUnit)
+	pUnit:RegisterScalingHealth()
 	pUnit:CastSpell(pUnit, 56571)
 	pUnit:RegisterEvent(LothrosCorruptionVisual, 3000, 0)
 	pUnit:RegisterEvent(DespawnSelfCorruption, 18000, 1)
+	pUnit:RegisterEvent(CorruptionTicker, 1000, 0)
 end
 
 RegisterCreatureEvent(90245, 5, LothrosCorruption)
+
+---------------------------
+-- Bloodfused Corruption --
+---------------------------
+
+local function GrowWalkTicker(_, _, _, pUnit)
+	local scale = pUnit:GetScale()
+	scale = scale + (scale / 4)
+	if scale > 1 then
+		scale = 1
+	end
+	pUnit:SetScale(scale)
+	pUnit:SetSpeed(1, scale)
+	if scale == 1 then
+		pUnit:RemoveEvents()
+		pUnit:SetFaction(17)
+		pUnit:SetUInt32Value(UNIT_FIELD_FLAGS, 0)
+		return
+	end
+end
+
+local function BloodFusedCorruptionSpawn(event, pUnit)
+	pUnit:SetUInt32Value(UNIT_FIELD_FLAGS, UNIT_FIELD_FLAG_C_UNATTACKABLE + UNIT_FIELD_FLAG_UNATTACKABLE + UNIT_FIELD_FLAG_UNTARGETABLE)
+	pUnit:SetFaction(35)
+	pUnit:RegisterEvent(GrowWalkTicker, 5000, 0)
+end
+
+RegisterCreatureEvent(90246, 5, BloodFusedCorruptionSpawn)
 
 ---------------------------
 -- Baron Rivermead --------

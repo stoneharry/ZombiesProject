@@ -41,15 +41,26 @@ end
 function Creature:RegisterScalingHealth()
 	if self then
 		local guid = self:GetGUID()
-		table.insert(healthMap, guid)
+		local exists = false
+		for i=#healthMap,1,-1 do
+			if healthMap[i] == guid then
+				exists = true
+				break
+			end
+		end
+		if not exists then
+			table.insert(healthMap, guid)
+		end
 	end
 end
 
 local function ScaleCreatureHealths(_, _, _)
-	for _,v in pairs(healthMap) do
-		local pUnit = GetCreatureByGUID(v)
+	for i=#healthMap,1,-1 do
+		local pUnit = GetCreatureByGUID(healthMap[i])
 		if pUnit and pUnit:IsAlive() then
 			pUnit:UpdateScaledHealth()
+		else
+			table.remove(healthMap, i)
 		end
 	end
 end
