@@ -1,6 +1,9 @@
 
 local playersRequired = 1
 
+local isOutroPlaying = false
+local isOutroPlaying = 0
+
 local DEBUG = false
 
 local function BugPrint(msg)
@@ -445,6 +448,48 @@ local function LothrosStartCheck(_, _, _, pUnit)
 	end
 end
 
+local function LothrosOutroChecker(_, _, _, pUnit)
+	if isOutroPlaying then
+		local npc = pUnit:GetNearestCreature(50, 90243)
+		if not npc then
+			outroCounter = outroCounter - 1
+			return
+		end
+		if not pUnit:GetNearestPlayer(50) then
+			npc:RemoveEvents()
+			npc:Kill(npc)
+			npc:Respawn()
+		end
+		outroCounter = outroCounter + 1
+		if outroCounter == 1 then
+			npc:RemoveEvents()
+			npc:RemoveAllAuras()
+			npc:CastSpell(npc, 67040)
+		elseif outroCounter == 6 then
+			npc:SendUnitYell("For the Light!", 0)
+			npc:CastSpell(npc, 70786)
+			npc:CastSpell(npc, 57771)
+			npc:Emote(376, 30000)
+			npc:CastSpell(npc, 71953)
+			npc:SetEquipmentSlots(45233, 0, 0)
+			npc:SetUInt32Value(UNIT_FIELD_FLAGS, 0)
+			for _,v in pairs(npc:GetCreaturesInRange(40, 90246)) do
+				v:RemoveEvents()
+				v:Kill(v)
+				v:DespawnOrUnsummon(1000)
+			end
+			for _,v in pairs(npc:GetCreaturesInRange(40, 90245)) do
+				v:RemoveEvents()
+				v:Kill(v)
+				v:DespawnOrUnsummon(1000)
+			end
+		end
+		return
+	elseif pUnit:GetHealthPct() <= 35 then
+		isOutroPlaying = true
+	end
+end
+
 local function LothrosEvents(event, pUnit)
 	if event == 5 then
 		pUnit:RegisterScalingHealth()
@@ -456,7 +501,6 @@ local function LothrosEvents(event, pUnit)
 	elseif event == 4 or event == 2 then
 		pUnit:RemoveEvents()
 		pUnit:SetUInt32Value(UNIT_FIELD_FLAGS, UNIT_FIELD_FLAG_UNATTACKABLE + UNIT_FIELD_FLAG_C_UNATTACKABLE)
-		pUnit:RegisterEvent(ResetLothros, 10000, 1)
 		for _,v in pairs(pUnit:GetCreaturesInRange(40, 90246)) do
 			v:RemoveEvents()
 			v:DespawnOrUnsummon(0)
@@ -464,11 +508,26 @@ local function LothrosEvents(event, pUnit)
 		for _,v in pairs(pUnit:GetCreaturesInRange(40, 90245)) do
 			v:RemoveEvents()
 		end
+		if event == 2 then
+			pUnit:RegisterEvent(ResetLothros, 10000, 1)
+			local npc = pUnit:GetNearestCreature(50, 90243)
+			if npc then
+				npc:RemoveEvents()
+				npc:Kill(npc)
+				npc:Respawn()
+			end
+		end
+		if event == 4 then
+			pUnit:SetData("currentScaling", 1.0)
+		end
 	elseif event == 1 then
+		isOutroPlaying = false
+		outroCounter = 0
 		pUnit:RegisterEvent(LothrosRegeneratePower, 2000, 0)
 		pUnit:RegisterEvent(LothrosCarrionSwarm, 15000, 0)
 		pUnit:RegisterEvent(LothrosSleep, 6000, 0)
 		pUnit:RegisterEvent(LothrosCorruptionSpawn, 2000, 0)
+		pUnit:RegisterEvent(LothrosOutroChecker, 1000, 0)
 	end
 end
 
@@ -508,7 +567,6 @@ local function DespawnSelfCorruption(_ ,_, _, pUnit)
 end
 
 local function LothrosCorruption(event, pUnit)
-	pUnit:RegisterScalingHealth()
 	pUnit:CastSpell(pUnit, 56571)
 	pUnit:RegisterEvent(LothrosCorruptionVisual, 3000, 0)
 	pUnit:RegisterEvent(DespawnSelfCorruption, 18000, 1)
@@ -538,6 +596,7 @@ local function GrowWalkTicker(_, _, _, pUnit)
 end
 
 local function BloodFusedCorruptionSpawn(event, pUnit)
+	pUnit:RegisterScalingHealth()
 	pUnit:SetUInt32Value(UNIT_FIELD_FLAGS, UNIT_FIELD_FLAG_C_UNATTACKABLE + UNIT_FIELD_FLAG_UNATTACKABLE + UNIT_FIELD_FLAG_UNTARGETABLE)
 	pUnit:SetFaction(35)
 	pUnit:RegisterEvent(GrowWalkTicker, 5000, 0)
@@ -557,6 +616,9 @@ local function KneelVisual(_, _, _, pUnit)
 end
 
 local function BaronSpawn(event, pUnit)
+	pUnit:SetUInt32Value(UNIT_FIELD_FLAGS, UNIT_FIELD_FLAG_C_UNATTACKABLE + UNIT_FIELD_FLAG_UNATTACKABLE)
+	pUnit:SetFaction(814)
+	pUnit:SetEquipmentSlots(0, 0, 0)
 	pUnit:SetHealth(pUnit:GetMaxHealth() / 2.5)
 	pUnit:SetPower(0, pUnit:GetMaxPower(0) / 1.5)
 	pUnit:RegisterEvent(KneelVisual, 5000, 0)

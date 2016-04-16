@@ -168,6 +168,7 @@ local function MinionAI1(event, pUnit)
 	if event == 1 then
 		pUnit:RegisterEvent(StormboltAttack, 11000, 0)
 		pUnit:RegisterEvent(MeleeStormAttack, 6000, 0)
+		pUnit:RegisterScalingHealth()
 	elseif event == 2 then
 		pUnit:RemoveEvents()
 		pUnit:RegisterEvent(lightningVisual, 100, 0)
@@ -188,6 +189,9 @@ local function MinionAI1(event, pUnit)
 			else
 				boss:SetHealth(healthRemaining)
 			end
+		end
+		if event == 4 then
+			pUnit:SetData("currentScaling", 1.0)
 		end
 	elseif event == 5 then
 		pUnit:RegisterEvent(lightningVisual, 100, 0)

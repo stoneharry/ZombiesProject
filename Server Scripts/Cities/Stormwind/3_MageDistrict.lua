@@ -80,6 +80,7 @@ local function BOSS_AI(event, pUnit)
 		pUnit:RegisterEvent(GROGS_ANGRY, 10000, 0)
 		pUnit:RegisterEvent(consumeSoul, 1000, 0)
 		pUnit:RegisterEvent(stompFire, 18000, 0)
+		pUnit:RegisterScalingHealth()
 	elseif event == 2 then
 		pUnit:RemoveEvents()
 		pUnit:RegisterEvent(blueFireVisual, 400, 0)
@@ -103,6 +104,9 @@ local function BOSS_AI(event, pUnit)
 			v:DespawnOrUnsummon(2000)
 		end
 		SetSiegeStage(GetSiegeStage() + 1, 1)
+		if event == 4 then
+			pUnit:SetData("currentScaling", 1.0)
+		end
 	elseif event == 5 then
 		if GetSiegeCanSpawn(1) then
 			pUnit:DespawnOrUnsummon(0)

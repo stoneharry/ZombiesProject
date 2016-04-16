@@ -240,6 +240,9 @@ local function BossEvents(event, pUnit)
 	end
 	if event == 2 or event == 4 then
 		ResetRoom(pUnit)
+		if event == 4 then
+			pUnit:SetData("currentScaling", 1.0)
+		end
 	end
 	if event == 1 then
 		pUnit:PlayMusic(20002) --15853) -- long battle music
@@ -252,6 +255,7 @@ local function BossEvents(event, pUnit)
 		-- killed somebody
 	elseif event == 5 then
 		pUnit:RegisterEvent(StartBattleSoon, 5000, 0)
+		pUnit:RegisterScalingHealth()
 	end
 end
 

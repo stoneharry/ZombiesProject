@@ -317,6 +317,7 @@ end
 
 local function EvilBrotherSpawn(event, pUnit)
 	if event == 5 then
+		pUnit:RegisterScalingHealth()
 		pUnit:RegisterEvent(CheckForNearbyPlayers, 2000, 0)
 		pUnit:SetDisplayId(1501)
 	elseif event == 4 or event == 2 then
@@ -350,6 +351,8 @@ local function EvilBrotherSpawn(event, pUnit)
 		end
 		if event == 2 then
 			EvilBrotherSpawn(5, pUnit)
+		elseif event == 4 then
+			pUnit:SetData("currentScaling", 1.0)
 		end
 	end
 end

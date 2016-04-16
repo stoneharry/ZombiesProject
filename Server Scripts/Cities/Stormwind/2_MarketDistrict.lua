@@ -209,6 +209,7 @@ local function Boss1(event, pUnit)
 	elseif event == 5 then
 		local o = PerformIngameSpawn(2, 187809, 0, 0, -8854.57, 509.94, 109.6, 3.802461)
 		o:SetByteValue(GAMEOBJECT_BYTES_1, 0, 0)
+		pUnit:RegisterScalingHealth()
 	else
 		for _,v in pairs(pUnit:GetGameObjectsInRange(40, 187809)) do
 			v:SetByteValue(GAMEOBJECT_BYTES_1, 0, 0)
@@ -217,6 +218,7 @@ local function Boss1(event, pUnit)
 		if event == 4 then
 			BossKilled = 1
 			UpdateZonesWorldStates()
+			pUnit:SetData("currentScaling", 1.0)
 		end
 	end
 end
@@ -237,6 +239,7 @@ end
 
 local function GryphonFly(event, pUnit)
 	if event == 5 then
+		pUnit:RegisterScalingHealth()
 		switch = not switch
 		if switch then
 			pUnit:MoveTo(0, -8860.1, 491.3, 109.7)
@@ -248,6 +251,9 @@ local function GryphonFly(event, pUnit)
 	else
 		pUnit:RemoveEvents()
 		pUnit:DespawnOrUnsummon(5000)
+		if event == 4 then
+			pUnit:SetData("currentScaling", 1.0)
+		end
 	end
 end
 
@@ -306,6 +312,7 @@ end
 local function TrashHandler(event, pUnit)
 	if event == 5 then
 		pUnit:CallForHelp(25)
+		pUnit:RegisterScalingHealth()
 	elseif event == 1 then
 		if pUnit:GetEntry() == 90079 then
 			pUnit:RegisterEvent(RangedAI, 1000, 1)
@@ -326,6 +333,7 @@ local function TrashHandler(event, pUnit)
 				table.remove(Scourge, index)
 				UpdateZonesWorldStates()
 			end
+			pUnit:SetData("currentScaling", 1.0)
 		end
 	end
 end
